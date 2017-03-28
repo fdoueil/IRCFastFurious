@@ -169,6 +169,7 @@ public class SimpleChatFrameClient extends JFrame {
 		splitPane.setLeftComponent(list);
 		
 		JTextPane textArea = new JTextPane((StyledDocument)documentModel);
+		textArea.setContentType(Messages.getString("SimpleChatFrameClient.textArea.contentType_1")); //$NON-NLS-1$
 		textArea.setEnabled(false);
 		JScrollPane scrollPaneText=new JScrollPane(textArea);
 		

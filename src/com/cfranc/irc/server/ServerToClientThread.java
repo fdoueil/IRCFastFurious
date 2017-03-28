@@ -63,6 +63,7 @@ public class ServerToClientThread extends Thread{
 			while (!done) {
 				try {
 					if(streamIn.available()>0){
+						// Parsing du message avec le séparateur du protocole
 						String line = streamIn.readUTF();
 						String[] userMsg=line.split(IfClientServerProtocol.SEPARATOR);
 						String login=userMsg[1];
@@ -72,6 +73,7 @@ public class ServerToClientThread extends Thread{
 							if(login.equals(user)){
 								System.err.println("ServerToClientThread::run(), login!=user"+login);
 							}
+							// Renvoi du message aux clients
 							BroadcastThread.sendMessage(user,msg);
 						}
 					}

@@ -78,6 +78,7 @@ public class ClientConnectThread extends Thread implements IfClientServerProtoco
 		String login=userPwd[1];
 		String pwd=userPwd[2];
 		int salonUser=0;
+		// Création de l'utilisateur
 		User newUser=new User(login, pwd, salonUser);
 		boolean isUserOK=authentication(newUser);
 		if(isUserOK){

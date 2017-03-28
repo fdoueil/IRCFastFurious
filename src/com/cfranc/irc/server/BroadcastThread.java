@@ -36,6 +36,7 @@ public class BroadcastThread extends Thread {
 		return res;
 	}
 
+	// Envoi du message à tous les thread ServerToClientThread
 	public static void sendMessage(User sender, String msg){
 		Collection<ServerToClientThread> clientTreads=clientTreadsMap.values();
 		Iterator<ServerToClientThread> receiverClientThreadIterator=clientTreads.iterator();

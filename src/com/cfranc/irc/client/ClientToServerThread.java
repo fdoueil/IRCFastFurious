@@ -80,7 +80,7 @@ public class ClientToServerThread extends Thread implements IfSenderModel{
 			String delUser=line.substring(IfClientServerProtocol.DEL.length());
 			if(clientListModel.contains(delUser)){
 				clientListModel.removeElement(delUser);
-				receiveMessage(delUser, " quite le salon !");
+				receiveMessage(delUser, " quitte le salon !");
 			}
 		}
 		else{
