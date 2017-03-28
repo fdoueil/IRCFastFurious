@@ -23,6 +23,7 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -52,6 +53,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JTabbedPane;
 
 public class SimpleChatFrameClient extends JFrame {
 	
@@ -67,6 +69,8 @@ public class SimpleChatFrameClient extends JFrame {
 	private final ResourceAction lockAction = new LockAction();
 	
 	private boolean isScrollLocked=true;
+	
+	JFrame frmEdd = new JFrame();
 
 	/**
 	 * Launch the application.
@@ -148,50 +152,6 @@ public class SimpleChatFrameClient extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		JSplitPane splitPane = new JSplitPane();
-		contentPane.add(splitPane, BorderLayout.CENTER);
-		
-		JList<String> list = new JList<String>(listModel);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				int iFirstSelectedElement=((JList)e.getSource()).getSelectedIndex();
-				if(iFirstSelectedElement>=0 && iFirstSelectedElement<listModel.getSize()){
-					senderName=listModel.getElementAt(iFirstSelectedElement);
-					getLblSender().setText(senderName);
-				}
-				else{
-					getLblSender().setText("?"); //$NON-NLS-1$
-				}
-			}
-		});
-		list.setMinimumSize(new Dimension(100, 0));
-		splitPane.setLeftComponent(list);
-		
-		JTextPane textArea = new JTextPane((StyledDocument)documentModel);
-		textArea.setEnabled(false);
-		JScrollPane scrollPaneText=new JScrollPane(textArea);
-		
-		JPopupMenu popupMenu = new JPopupMenu();
-		addPopup(textArea, popupMenu);
-		
-		JCheckBoxMenuItem chckbxmntmLock = new JCheckBoxMenuItem(Messages.getString("SimpleChatFrameClient.10")); //$NON-NLS-1$
-		chckbxmntmLock.setEnabled(isScrollLocked);
-		popupMenu.add(chckbxmntmLock);
-		chckbxmntmLock.addActionListener(lockAction);
-		
-		scrollPaneText.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-			
-			@Override
-			public void adjustmentValueChanged(AdjustmentEvent e) {
-				if(isScrollLocked){
-					e.getAdjustable().setValue(e.getAdjustable().getMaximum());
-				}				
-			}
-		});
-
-		splitPane.setRightComponent(scrollPaneText);
-		
 		JPanel panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.SOUTH);
 		panel_1.setLayout(new BorderLayout(0, 0));
@@ -239,6 +199,61 @@ public class SimpleChatFrameClient extends JFrame {
 		contentPane.add(toolBar, BorderLayout.NORTH);
 		
 		JButton button = toolBar.add(sendAction);
+		
+		JButton btnNouveauSalon = new JButton(Messages.getString("SimpleChatFrameClient.btnNouveauSalon.text_1")); //$NON-NLS-1$
+		btnNouveauSalon.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String strSalon = JOptionPane.showInputDialog(frmEdd,"Saisissez le nom du salon","Création d'un salon", JOptionPane.PLAIN_MESSAGE);
+			}
+		});
+		toolBar.add(btnNouveauSalon);
+		
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		contentPane.add(tabbedPane, BorderLayout.CENTER);
+		
+		JSplitPane splitPane = new JSplitPane();
+		tabbedPane.addTab("Général", null, splitPane, null);
+		
+		JList<String> list = new JList<String>(listModel);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				int iFirstSelectedElement=((JList)e.getSource()).getSelectedIndex();
+				if(iFirstSelectedElement>=0 && iFirstSelectedElement<listModel.getSize()){
+					senderName=listModel.getElementAt(iFirstSelectedElement);
+					getLblSender().setText(senderName);
+				}
+				else{
+					getLblSender().setText("?"); //$NON-NLS-1$
+				}
+			}
+		});
+		list.setMinimumSize(new Dimension(100, 0));
+		splitPane.setLeftComponent(list);
+		
+		JTextPane textArea = new JTextPane((StyledDocument)documentModel);
+		textArea.setEnabled(false);
+		JScrollPane scrollPaneText=new JScrollPane(textArea);
+		
+		JPopupMenu popupMenu = new JPopupMenu();
+		addPopup(textArea, popupMenu);
+		
+		JCheckBoxMenuItem chckbxmntmLock = new JCheckBoxMenuItem(Messages.getString("SimpleChatFrameClient.10")); //$NON-NLS-1$
+		chckbxmntmLock.setEnabled(isScrollLocked);
+		popupMenu.add(chckbxmntmLock);
+		chckbxmntmLock.addActionListener(lockAction);
+		
+		scrollPaneText.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+			
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				if(isScrollLocked){
+					e.getAdjustable().setValue(e.getAdjustable().getMaximum());
+				}				
+			}
+		});
+		
+				splitPane.setRightComponent(scrollPaneText);
 	}
 
 	public JLabel getLblSender() {
