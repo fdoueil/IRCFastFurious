@@ -7,4 +7,5 @@ public interface IfClientServerProtocol {
 	public static final String OK = "#OK";
 	public static final String ADD = "#+#";
 	public static final String DEL = "#-#";
+	public static final String CREATE_CHANNEL = "#Channel?#";
 }
