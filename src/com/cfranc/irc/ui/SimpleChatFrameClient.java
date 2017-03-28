@@ -152,45 +152,6 @@ public class SimpleChatFrameClient extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		JList<String> list = new JList<String>(listModel);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				int iFirstSelectedElement=((JList)e.getSource()).getSelectedIndex();
-				if(iFirstSelectedElement>=0 && iFirstSelectedElement<listModel.getSize()){
-					senderName=listModel.getElementAt(iFirstSelectedElement);
-					getLblSender().setText(senderName);
-				}
-				else{
-					getLblSender().setText("?"); //$NON-NLS-1$
-				}
-			}
-		});
-		list.setMinimumSize(new Dimension(100, 0));
-		
-		JTextPane textArea = new JTextPane((StyledDocument)documentModel);
-		textArea.setContentType(Messages.getString("SimpleChatFrameClient.textArea.contentType_1")); //$NON-NLS-1$
-		textArea.setEnabled(false);
-		JScrollPane scrollPaneText=new JScrollPane(textArea);
-		
-		JPopupMenu popupMenu = new JPopupMenu();
-		addPopup(textArea, popupMenu);
-		
-		JCheckBoxMenuItem chckbxmntmLock = new JCheckBoxMenuItem(Messages.getString("SimpleChatFrameClient.10")); //$NON-NLS-1$
-		chckbxmntmLock.setEnabled(isScrollLocked);
-		popupMenu.add(chckbxmntmLock);
-		chckbxmntmLock.addActionListener(lockAction);
-		
-		scrollPaneText.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-			
-			@Override
-			public void adjustmentValueChanged(AdjustmentEvent e) {
-				if(isScrollLocked){
-					e.getAdjustable().setValue(e.getAdjustable().getMaximum());
-				}				
-			}
-		});
-
 		JPanel panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.SOUTH);
 		panel_1.setLayout(new BorderLayout(0, 0));
