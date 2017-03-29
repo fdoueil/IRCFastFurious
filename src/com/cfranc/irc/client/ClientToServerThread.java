@@ -24,14 +24,17 @@ public class ClientToServerThread extends Thread implements IfSenderModel{
 	String login,pwd;
 	DefaultListModel<String> clientListModel;
 	StyledDocument documentModel;
-	
-	public ClientToServerThread(StyledDocument documentModel, DefaultListModel<String> clientListModel, Socket socket, String login, String pwd) {
+	SimpleChatClientApp controleur;
+
+	public ClientToServerThread(SimpleChatClientApp controleur, StyledDocument documentModel,
+			DefaultListModel<String> clientListModel, Socket socket, String login, String pwd) {
 		super();
-		this.documentModel=documentModel;
-		this.clientListModel=clientListModel;
+		this.documentModel = documentModel;
+		this.clientListModel = clientListModel;
 		this.socket = socket;
-		this.login=login;
-		this.pwd=pwd;
+		this.login = login;
+		this.pwd = pwd;
+		this.controleur = controleur;
 	}
 	
 	public void open() throws IOException {

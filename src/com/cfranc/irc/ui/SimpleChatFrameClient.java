@@ -56,7 +56,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JTabbedPane;
 
-public class SimpleChatFrameClient extends JFrame {
+public class SimpleChatFrameClient extends JFrame{
 	
 	private static Document documentModel;
 	private static ListModel<String> listModel;
@@ -68,6 +68,7 @@ public class SimpleChatFrameClient extends JFrame {
 	private JLabel lblSender;
 	private final ResourceAction sendAction = new SendAction();
 	private final ResourceAction lockAction = new LockAction();
+	private JTabbedPane tabbedPane;
 	
 	private boolean isScrollLocked=true;
 	
@@ -210,7 +211,7 @@ public class SimpleChatFrameClient extends JFrame {
 		});
 		toolBar.add(btnNouveauSalon);
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
 		
 		JSplitPane splitPane = new JSplitPane();
@@ -267,6 +268,42 @@ public class SimpleChatFrameClient extends JFrame {
 		}
 	}
 	
+	public void creerSalon(String salonName){
+		//this.frame;		
+		
+		JSplitPane splitPane2 = new JSplitPane();		
+		tabbedPane.addTab(salonName, null, splitPane2, null);
+		
+		
+		JList<String> list = new JList<String>(listModel);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				int iFirstSelectedElement=((JList)e.getSource()).getSelectedIndex();
+				if(iFirstSelectedElement>=0 && iFirstSelectedElement<listModel.getSize()){
+					senderName=listModel.getElementAt(iFirstSelectedElement);
+					getLblSender().setText(senderName);
+				}
+				else{
+					getLblSender().setText("?"); //$NON-NLS-1$
+				}
+			}
+		});
+		
+		list.setMinimumSize(new Dimension(100, 0));
+		splitPane2.setLeftComponent(list);
+		
+		JTextPane textArea = new JTextPane((StyledDocument)documentModel);
+		textArea.setEnabled(false);
+		JScrollPane scrollPaneText2=new JScrollPane(textArea);
+		
+		JPopupMenu popupMenu = new JPopupMenu();
+		addPopup(textArea, popupMenu);
+		splitPane2.setRightComponent(scrollPaneText2);
+		
+
+	}
+	
 	private class SendAction extends ResourceAction{	
 		private Icon getIcon(){
 			return new ImageIcon(SimpleChatFrameClient.class.getResource("send_16_16.jpg")); //$NON-NLS-1$
@@ -308,4 +345,5 @@ public class SimpleChatFrameClient extends JFrame {
 			}
 		});
 	}
+	
 }
