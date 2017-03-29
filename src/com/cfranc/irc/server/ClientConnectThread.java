@@ -13,16 +13,16 @@ import javax.swing.text.StyledDocument;
 import com.cfranc.irc.IfClientServerProtocol;
 
 public class ClientConnectThread extends Thread implements IfClientServerProtocol {
-	StyledDocument model=null;
-	DefaultListModel<String> clientListModel;		
-	
-	private boolean canStop=false;
+	StyledDocument model = null;
+	DefaultListModel<String> clientListModel;
+
+	private boolean canStop = false;
 	private ServerSocket server = null;
-	
-	private void printMsg(String msg){
+
+	private void printMsg(String msg) {
 		try {
-			if(model!=null){
-				model.insertString(model.getLength(), msg+"\n", null);
+			if (model != null) {
+				model.insertString(model.getLength(), msg + "\n", null);
 			}
 			System.out.println(msg);
 		} catch (BadLocationException e) {
@@ -30,29 +30,28 @@ public class ClientConnectThread extends Thread implements IfClientServerProtoco
 			e.printStackTrace();
 		}
 	}
-	
+
 	public ClientConnectThread(int port, StyledDocument model, DefaultListModel<String> clientListModel) {
 		try {
-			this.model=model;
-			this.clientListModel=clientListModel;
+			this.model = model;
+			this.clientListModel = clientListModel;
 			printMsg("Binding to port " + port + ", please wait  ...");
 			server = new ServerSocket(port);
 			printMsg("Server started: " + server);
-		} 
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			System.out.println(ioe);
 		}
 	}
-	
+
 	@Override
 	public void run() {
-		while(!canStop){
+		while (!canStop) {
 			printMsg("Waiting for a client ...");
 			Socket socket;
 			try {
 				socket = server.accept();
 				printMsg("Client accepted: " + socket);
-				
+
 				// Accept new client or close the socket
 				acceptClient(socket);
 			} catch (IOException e) {
@@ -67,48 +66,46 @@ public class ClientConnectThread extends Thread implements IfClientServerProtoco
 
 	private void acceptClient(Socket socket) throws IOException, InterruptedException {
 		// Read user login and pwd
-		DataInputStream dis=new DataInputStream(socket.getInputStream());
-		DataOutputStream dos=new DataOutputStream(socket.getOutputStream());
+		DataInputStream dis = new DataInputStream(socket.getInputStream());
+		DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
 		dos.writeUTF(LOGIN_PWD);
-		while(dis.available()<=0){
+		while (dis.available() <= 0) {
 			Thread.sleep(100);
 		}
-		String reponse=dis.readUTF();
-		String[] userPwd=reponse.split(SEPARATOR);
-		String login=userPwd[1];
-		String pwd=userPwd[2];
-		int salonUser=0;
+		String reponse = dis.readUTF();
+		String[] userPwd = reponse.split(SEPARATOR);
+		String login = userPwd[1];
+		String pwd = userPwd[2];
+		int salonUser = 0;
 		// Création de l'utilisateur
-		User newUser=new User(login, pwd, salonUser);
-		boolean isUserOK=authentication(newUser);
-		if(isUserOK){
-			
-			ServerToClientThread client=new ServerToClientThread(newUser, socket);
+		User newUser = new User(login, pwd, salonUser);
+		boolean isUserOK = authentication(newUser);
+		if (isUserOK) {
+
+			ServerToClientThread client = new ServerToClientThread(newUser, socket, clientListModel); // + HRAJ
 			dos.writeUTF(OK);
 
 			// Add user
-			if(BroadcastThread.addClient(newUser, client)){
-				client.start();			
-				clientListModel.addElement(newUser.getLogin());
-				dos.writeUTF(ADD+login);
+			if (BroadcastThread.addClient(newUser, client)) {
+				client.start();
+				clientListModel.addElement(newUser.getLogin()); 
+				dos.writeUTF(ADD + login);
 			}
-		}
-		else{
+		} else {
 			System.out.println("socket.close()");
 			dos.writeUTF(KO);
 			dos.close();
 			socket.close();
 		}
 	}
-	
-	private boolean authentication(User newUser){
+
+	private boolean authentication(User newUser) {
 		return BroadcastThread.accept(newUser);
 	}
 
-	
 	public void open() throws IOException {
 	}
-	
+
 	public void close() throws IOException {
 		System.err.println("server:close()");
 		if (server != null)
