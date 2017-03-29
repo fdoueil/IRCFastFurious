@@ -44,6 +44,7 @@ import javax.swing.text.Document;
 import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
 
+import com.cfranc.irc.IfClientServerProtocol;
 import com.cfranc.irc.client.IfSenderModel;
 
 import javax.swing.JPopupMenu;
@@ -204,6 +205,7 @@ public class SimpleChatFrameClient extends JFrame {
 		btnNouveauSalon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String strSalon = JOptionPane.showInputDialog(frmEdd,"Saisissez le nom du salon","Création d'un salon", JOptionPane.PLAIN_MESSAGE);
+				sender.setMsgToSend(IfClientServerProtocol.CREATE_CHANNEL + strSalon);
 			}
 		});
 		toolBar.add(btnNouveauSalon);
