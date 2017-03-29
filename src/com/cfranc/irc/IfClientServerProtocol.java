@@ -7,8 +7,9 @@ public interface IfClientServerProtocol {
 	public static final String OK = "#OK";
 	public static final String ADD = "#+#";
 	public static final String DEL = "#-#";
-	// sample for create channel 'Discussions' and creator user 'John' -> #+C#Discussions#John
-	public static final String CREATE_CHANNEL = "#+C#";
-	// sample for create channel 'Discussions' and joined user 'Paul' -> #C+U#Discussions#Paul
-	public static final String USER_JOIN_CHANNEL = "#C+U#";
+	// sample for create channel 'Discussions' and creator user 'John' -> #John#+C#Discussions
+	public static final String CREATE_CHANNEL = "+C";
+	public static final String OK_CHANNEL = "OK+C";
+	// sample for create channel 'Discussions' and joined user 'Paul' -> #Paul#C+U#Discussions
+	public static final String USER_JOIN_CHANNEL = "C+U";
 }
