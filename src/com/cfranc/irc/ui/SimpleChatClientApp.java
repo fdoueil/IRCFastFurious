@@ -7,6 +7,7 @@ import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Observable;
 import java.util.Scanner;
 
 import javax.swing.DefaultListModel;
@@ -115,6 +116,10 @@ public class SimpleChatClientApp {
 		});
 	}
 	
+	public void creerSalon(String salonName){
+		this.frame.creerSalon(salonName);
+	}
+	
 	public void hideClient() {
 		
 		// Init GUI
@@ -138,7 +143,7 @@ public class SimpleChatClientApp {
 		try {
 			socketClientServer = new Socket(this.serverName, this.serverPort);
 			// Start connection services
-			clientToServerThread=new ClientToServerThread(documentModel, clientListModel,socketClientServer,clientName, clientPwd);
+			clientToServerThread=new ClientToServerThread(this, documentModel, clientListModel,socketClientServer,clientName, clientPwd);
 			clientToServerThread.start();
 
 			System.out.println("Connected: " + socketClientServer);

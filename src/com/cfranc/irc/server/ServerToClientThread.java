@@ -74,7 +74,7 @@ public class ServerToClientThread extends Thread{
 								Salon salon = new Salon(userMsg[3],false);
 								user.getSalons().add(salon);
 								// Acquittement de la création du salon
-								BroadcastThread.sendMessage(user,IfClientServerProtocol.OK_CHANNEL);
+								BroadcastThread.sendMessage(user,salon.getNomSalon()+IfClientServerProtocol.SEPARATOR+IfClientServerProtocol.OK_CHANNEL);
 							}
 						}
 						done = msg.equals(".bye");
