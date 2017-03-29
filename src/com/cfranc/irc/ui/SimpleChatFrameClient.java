@@ -205,7 +205,7 @@ public class SimpleChatFrameClient extends JFrame {
 		btnNouveauSalon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String strSalon = JOptionPane.showInputDialog(frmEdd,"Saisissez le nom du salon","Création d'un salon", JOptionPane.PLAIN_MESSAGE);
-				sender.setMsgToSend(IfClientServerProtocol.CREATE_CHANNEL + strSalon);
+				sender.setMsgToSend(IfClientServerProtocol.CREATE_CHANNEL + IfClientServerProtocol.SEPARATOR + strSalon);
 			}
 		});
 		toolBar.add(btnNouveauSalon);

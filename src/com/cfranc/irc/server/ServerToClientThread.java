@@ -68,6 +68,15 @@ public class ServerToClientThread extends Thread{
 						String[] userMsg=line.split(IfClientServerProtocol.SEPARATOR);
 						String login=userMsg[1];
 						String msg=userMsg[2];
+						// Creer Salon
+						if (userMsg[2].startsWith(IfClientServerProtocol.CREATE_CHANNEL)) {
+							if(login.equals(user.getLogin())){
+								Salon salon = new Salon(userMsg[3],false);
+								user.getSalons().add(salon);
+								// Acquittement de la création du salon
+								BroadcastThread.sendMessage(user,IfClientServerProtocol.OK_CHANNEL);
+							}
+						}
 						done = msg.equals(".bye");
 						if(!done){
 							if(login.equals(user)){
@@ -91,5 +100,5 @@ public class ServerToClientThread extends Thread{
 			e.printStackTrace();
 		}
 	}
-	
+
 }
