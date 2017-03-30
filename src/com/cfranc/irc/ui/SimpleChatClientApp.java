@@ -186,6 +186,10 @@ public class SimpleChatClientApp {
 		quitApp(app);
 	}
 
+	public void creerSalon(String salonName){
+		this.frame.creerSalon(salonName);
+	}
+	
 	private static void quitApp(final SimpleChatClientApp app) {
 		try {
 			app.clientToServerThread.quitServer();
