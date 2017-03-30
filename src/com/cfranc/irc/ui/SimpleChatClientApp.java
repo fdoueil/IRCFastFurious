@@ -144,7 +144,7 @@ public class SimpleChatClientApp {
 		try {
 			socketClientServer = new Socket(this.serverName, this.serverPort);
 			// Start connection services
-			clientToServerThread = new ClientToServerThread(documentModel, clientListModel, socketClientServer,
+			clientToServerThread = new ClientToServerThread(this, documentModel, clientListModel, socketClientServer,
 					clientName, clientPwd);
 			clientToServerThread.start();
 
