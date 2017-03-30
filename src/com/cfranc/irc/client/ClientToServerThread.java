@@ -72,6 +72,9 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 	void readMsg() throws IOException {
 		String line = streamIn.readUTF();
 		System.out.println(line);
+		
+		System.out.println("suppression client ");
+			
 
 		if (line.startsWith(IfClientServerProtocol.ADD)) {
 			String newUser = line.substring(IfClientServerProtocol.ADD.length());
@@ -133,21 +136,21 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 			done = !authentification();
 			while (!done) {
 				try {
-					System.out.println("coté client streamIn.available =  "+ streamIn.available());
 					if (streamIn.available() > 0) {
-						System.out.println("coté client streamIn.available >0 " );
+						System.out.println("coté client streamIn.available >0 ");
 						readMsg();
 					}
 
 					if (!sendMsg()) {
 						Thread.sleep(100);
 					}
+
 				} catch (IOException | InterruptedException ioe) {
 					ioe.printStackTrace();
 					done = true;
 				}
 			}
-			
+
 			close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
