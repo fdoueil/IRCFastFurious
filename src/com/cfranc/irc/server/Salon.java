@@ -1,6 +1,26 @@
 package com.cfranc.irc.server;
 
 public class Salon {
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Salon other = (Salon) obj;
+		if (bPrivate != other.bPrivate)
+			return false;
+		if (nomSalon == null) {
+			if (other.nomSalon != null)
+				return false;
+		} else if (!nomSalon.equals(other.nomSalon))
+			return false;
+		return true;
+	}
+	
 	private String nomSalon=null;
 	private boolean bPrivate=false;
 	
