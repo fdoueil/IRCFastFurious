@@ -18,7 +18,8 @@ public class ClientConnectThread extends Thread implements IfClientServerProtoco
 
 	private boolean canStop = false;
 	private ServerSocket server = null;
-
+	private SalonLst serverSalon;
+	
 	private void printMsg(String msg) {
 		try {
 			if (model != null) {
@@ -31,10 +32,11 @@ public class ClientConnectThread extends Thread implements IfClientServerProtoco
 		}
 	}
 
-	public ClientConnectThread(int port, StyledDocument model, DefaultListModel<String> clientListModel) {
+	public ClientConnectThread(int port, StyledDocument model, DefaultListModel<String> clientListModel, SalonLst salonLst) {
 		try {
 			this.model = model;
 			this.clientListModel = clientListModel;
+			this.serverSalon= salonLst;
 			printMsg("Binding to port " + port + ", please wait  ...");
 			server = new ServerSocket(port);
 			printMsg("Server started: " + server);
