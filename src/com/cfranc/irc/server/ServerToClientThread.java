@@ -85,7 +85,8 @@ public class ServerToClientThread extends Thread {
 								Salon salon = new Salon(userMsg[3], false);
 								user.getSalons().add(salon);
 								// Acquittement de la création du salon
-								BroadcastThread.sendMessage(user,salon.getNomSalon()+IfClientServerProtocol.SEPARATOR+IfClientServerProtocol.OK_CHANNEL);
+								BroadcastThread.sendMessage(user, salon.getNomSalon() + IfClientServerProtocol.SEPARATOR
+										+ IfClientServerProtocol.OK_CHANNEL);
 
 							}
 						}
@@ -95,19 +96,32 @@ public class ServerToClientThread extends Thread {
 								System.err.println("ServerToClientThread::run(), login!=user" + login);
 							}
 							// Renvoi du message aux clients
-							BroadcastThread.sendMessage(user, msg);
+
+							if (line.startsWith(IfClientServerProtocol.DEL)) {
+
+								clientListModel.removeElement(user.getLogin());
+
+								// BroadcastThread.sendMessage(user,
+								// IfClientServerProtocol.DEL);
+
+								/* BroadcastThread.sendMessage(user, msg); */
+								// BroadcastThread.removeClient(user);
+								
+								// BroadcastThread.sendMessage(user, IfClientServerProtocol.DEL);
+								
+								BroadcastThread.removeClient(user);
+
+							} else {
+								BroadcastThread.sendMessage(user, msg);
+							}
 						}
-						//+ HRAJ
-						
-						System.out.println("line.startsWith(IfClientServerProtocol.DEL= " + line.startsWith(IfClientServerProtocol.DEL));
+
+						// + HRAJ
+
+						System.out.println("line.startsWith(IfClientServerProtocol.DEL= "
+								+ line.startsWith(IfClientServerProtocol.DEL));
 						System.out.println("user= " + user);
-						
-						if (line.startsWith(IfClientServerProtocol.DEL)) {
-
-							clientListModel.removeElement(user.getLogin());
-
-							BroadcastThread.removeClient(user);
-						}
+						System.out.println("msg= " + msg);
 
 					} else {
 						doPost();
