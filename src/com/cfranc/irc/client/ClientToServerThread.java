@@ -14,6 +14,7 @@ import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
 
 import com.cfranc.irc.IfClientServerProtocol;
+import com.cfranc.irc.server.BroadcastThread;
 import com.cfranc.irc.ui.SimpleChatClientApp;
 
 public class ClientToServerThread extends Thread implements IfSenderModel {
@@ -132,7 +133,9 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 			done = !authentification();
 			while (!done) {
 				try {
+					System.out.println("coté client streamIn.available =  "+ streamIn.available());
 					if (streamIn.available() > 0) {
+						System.out.println("coté client streamIn.available >0 " );
 						readMsg();
 					}
 
@@ -144,6 +147,7 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 					done = true;
 				}
 			}
+			
 			close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
