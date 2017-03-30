@@ -6,6 +6,10 @@ public class SalonLst  {
 
 	private ArrayList <Salon> lstSalons; // list des salons
 	
+	public ArrayList<Salon> getLstSalons() {
+		return lstSalons;
+	}
+
 	public SalonLst(){
 		this.lstSalons = new ArrayList<Salon>();
 

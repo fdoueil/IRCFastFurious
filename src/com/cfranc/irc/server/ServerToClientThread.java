@@ -18,6 +18,7 @@ public class ServerToClientThread extends Thread {
 	private DataInputStream streamIn = null;
 	private DataOutputStream streamOut = null;
 	DefaultListModel<String> clientListModel; // new HRAJ
+	private SalonLst serverSalon;
 
 	public ServerToClientThread(User user, Socket socket) {
 		super();
@@ -26,11 +27,12 @@ public class ServerToClientThread extends Thread {
 	}
 
 	// new HRAJ
-	public ServerToClientThread(User user, Socket socket, DefaultListModel<String> clientListModel) {
+	public ServerToClientThread(User user, Socket socket, DefaultListModel<String> clientListModel, SalonLst salonLst) {
 		super();
 		this.user = user;
 		this.socket = socket;
 		this.clientListModel = clientListModel;
+		this.serverSalon = salonLst;
 	}
 
 	List<String> msgToPost = new ArrayList<String>();
@@ -79,17 +81,7 @@ public class ServerToClientThread extends Thread {
 						String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
 						String login = userMsg[1];
 						String msg = userMsg[2];
-						// Creer Salon
-						if (userMsg[2].startsWith(IfClientServerProtocol.CREATE_CHANNEL)) {
-							if (login.equals(user.getLogin())) {
-								Salon salon = new Salon(userMsg[3], false);
-								user.getSalons().add(salon);
-								// Acquittement de la création du salon
-								BroadcastThread.sendMessage(user, salon.getNomSalon() + IfClientServerProtocol.SEPARATOR
-										+ IfClientServerProtocol.OK_CHANNEL);
-
-							}
-						}
+						
 						done = msg.equals(".bye");
 						if (!done) {
 							if (login.equals(user)) {
@@ -106,11 +98,27 @@ public class ServerToClientThread extends Thread {
 
 								/* BroadcastThread.sendMessage(user, msg); */
 								// BroadcastThread.removeClient(user);
-								
-								// BroadcastThread.sendMessage(user, IfClientServerProtocol.DEL);
-								
+
+								// BroadcastThread.sendMessage(user,
+								// IfClientServerProtocol.DEL);
+
 								BroadcastThread.removeClient(user);
 
+							} else if (userMsg[2].startsWith(IfClientServerProtocol.CREATE_CHANNEL)) {
+								if (login.equals(user.getLogin())) {
+									Salon salon = new Salon(userMsg[3], false);
+
+									// ajout le salon dans la liste des salons
+									if (!serverSalon.getLstSalons().contains(salon)) {
+										serverSalon.getLstSalons().add(salon);
+										// ajout le salon pour le user
+										user.getSalons().add(salon);
+										// Acquittement de la création du salon
+										BroadcastThread.sendMessage(user, salon.getNomSalon()
+												+ IfClientServerProtocol.SEPARATOR + IfClientServerProtocol.OK_CHANNEL);
+									}
+
+								}
 							} else {
 								BroadcastThread.sendMessage(user, msg);
 							}
@@ -131,9 +139,11 @@ public class ServerToClientThread extends Thread {
 				}
 			}
 			close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		}catch(
+
+	IOException e)
+	{
+		// TODO Auto-generated catch block
+		e.printStackTrace();
 	}
-}
+}}

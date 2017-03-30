@@ -84,7 +84,7 @@ public class ClientConnectThread extends Thread implements IfClientServerProtoco
 		boolean isUserOK = authentication(newUser);
 		if (isUserOK) {
 
-			ServerToClientThread client = new ServerToClientThread(newUser, socket, clientListModel); // + HRAJ
+			ServerToClientThread client = new ServerToClientThread(newUser, socket, clientListModel, serverSalon); // + HRAJ
 			dos.writeUTF(OK);
 
 			// Add user
