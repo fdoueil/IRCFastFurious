@@ -45,8 +45,9 @@ public class ServerToClientThread extends Thread {
 		if (serverSalon.getLstSalons().size() > 1) {
 			for (Salon salon : serverSalon.getLstSalons()) {
 				if (salon.getNomSalon() != "Général") {
-					msgToPost.add(IfClientServerProtocol.SEPARATOR + salon.userCreator.getLogin() + IfClientServerProtocol.SEPARATOR +
-							salon.getNomSalon() + IfClientServerProtocol.SEPARATOR + IfClientServerProtocol.OK_CHANNEL);
+					msgToPost.add(IfClientServerProtocol.SEPARATOR + salon.userCreator.getLogin()
+							+ IfClientServerProtocol.SEPARATOR + salon.getNomSalon() + IfClientServerProtocol.SEPARATOR
+							+ IfClientServerProtocol.OK_CHANNEL);
 				}
 			}
 		}
@@ -107,19 +108,7 @@ public class ServerToClientThread extends Thread {
 								System.out.println("IfClientServerProtocol.DEL = " + IfClientServerProtocol.DEL);
 								System.out.println("user = " + user);
 								System.out.println("msg = " + msg);
-								// BroadcastThread.sendMessage(user,
-								// IfClientServerProtocol.DEL);
 								BroadcastThread.sendQuitUser(user, IfClientServerProtocol.DEL);
-
-								// BroadcastThread.sendMessage(user,
-								// IfClientServerProtocol.DEL);
-
-								/* BroadcastThread.sendMessage(user, msg); */
-								// BroadcastThread.removeClient(user);
-
-								// BroadcastThread.sendMessage(user,
-								// IfClientServerProtocol.DEL);
-
 								BroadcastThread.removeClient(user);
 
 							} else if (userMsg[2].startsWith(IfClientServerProtocol.CREATE_CHANNEL)) {
@@ -136,6 +125,20 @@ public class ServerToClientThread extends Thread {
 												+ IfClientServerProtocol.SEPARATOR + IfClientServerProtocol.OK_CHANNEL);
 									}
 
+								}
+							} else if (userMsg[2].startsWith(IfClientServerProtocol.USER_JOIN_CHANNEL)) {
+								if (login.equals(user.getLogin())) {
+
+									int indexSalon = 0;
+									indexSalon = serverSalon.findSalonIndexByName(userMsg[3]);
+
+									// ajout le salon dans la liste des salons
+									serverSalon.get(indexSalon).hUsersLogin.add(userMsg[1]);
+									
+									// Acquittement de la création du salon
+									BroadcastThread.sendMessage(user,
+											userMsg[3] + IfClientServerProtocol.SEPARATOR
+													+ IfClientServerProtocol.OK_JOIN_CHANNEL);
 								}
 							} else {
 								BroadcastThread.sendMessage(user, msg);

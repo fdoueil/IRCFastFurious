@@ -239,8 +239,14 @@ public class SimpleChatFrameClient extends JFrame {
 
 		toolBar.add(cbSalonJoignable);
 
-		JButton btnNewButton = new JButton(Messages.getString("SimpleChatFrameClient.btnNewButton.text"));
-		toolBar.add(btnNewButton);
+		JButton btRejoindreSalon = new JButton(Messages.getString("SimpleChatFrameClient.btnNewButton.text"));
+		btRejoindreSalon.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				sender.setMsgToSend(IfClientServerProtocol.USER_JOIN_CHANNEL + IfClientServerProtocol.SEPARATOR
+						+ cbSalonJoignable.getSelectedItem());
+			}
+		});
+		toolBar.add(btRejoindreSalon);
 
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		contentPane.add(tabbedPane, BorderLayout.CENTER);

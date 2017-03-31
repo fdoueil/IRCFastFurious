@@ -25,5 +25,15 @@ public class SalonLst  {
 		
 	}
 
+	public int findSalonIndexByName(String salonName) {
+		int res=0;
+		for(int i=0;i<this.lstSalons.size();i++) {
+			if(this.lstSalons.get(i).getNomSalon().equals(salonName)) {
+				res=i;
+				break;
+			}
+		}
+		return res;
+	}
 
 }

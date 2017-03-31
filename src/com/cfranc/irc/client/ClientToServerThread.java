@@ -110,7 +110,10 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
  				controleur.creerSalonJoignable(userMsg[1],userMsg[2]);
  			}
 
-		} else {
+		} else if (line.endsWith(IfClientServerProtocol.OK_JOIN_CHANNEL)) { 
+			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
+			receiveMessage(userMsg[1], " a rejoint le salon " +userMsg[2]);
+		}else {
 			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
 			String user = userMsg[1];
 			receiveMessage(user, userMsg[2]);
