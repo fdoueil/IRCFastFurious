@@ -56,6 +56,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JTabbedPane;
+import javax.swing.JComboBox;
 
 public class SimpleChatFrameClient extends JFrame {
 
@@ -228,6 +229,19 @@ public class SimpleChatFrameClient extends JFrame {
 			}
 		});
 		toolBar.add(btnNouveauSalon);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setEnabled(false);
+		comboBox.setMinimumSize(new Dimension(20, 22));
+		comboBox.setMaximumRowCount(100);
+		comboBox.setEditable(true);
+		comboBox.setSize(10, 10);
+		
+		toolBar.add(comboBox);
+		
+		JButton btnNewButton = new JButton(Messages.getString("SimpleChatFrameClient.btnNewButton.text")); //$NON-NLS-1$
+		btnNewButton.setEnabled(false);
+		toolBar.add(btnNewButton);
 
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
