@@ -36,14 +36,14 @@ public class Salon {
 	public void setbPrivate(boolean bPrivate) {
 		this.bPrivate = bPrivate;
 	}
-	public Salon(String nomSalon, boolean bPrivate) {
+	public Salon(String nomSalon, User userCreator, boolean bPrivate) {
 		super();
 		this.nomSalon = nomSalon;
 		this.bPrivate = bPrivate;
+		this.userCreator = userCreator;
 	}
 	
-	//User userCreator = null; need it ?
-	
+	protected User userCreator = null; // need it ?
 	
 	
 }

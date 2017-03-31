@@ -41,6 +41,17 @@ public class ServerToClientThread extends Thread {
 		msgToPost.add(msg);
 	}
 
+	public synchronized void postListSalon() {
+		if (serverSalon.getLstSalons().size() > 1) {
+			for (Salon salon : serverSalon.getLstSalons()) {
+				if (salon.getNomSalon() != "Général") {
+					msgToPost.add(IfClientServerProtocol.SEPARATOR + salon.userCreator.getLogin() + IfClientServerProtocol.SEPARATOR +
+							salon.getNomSalon() + IfClientServerProtocol.SEPARATOR + IfClientServerProtocol.OK_CHANNEL);
+				}
+			}
+		}
+	}
+
 	private synchronized void doPost() {
 		try {
 			for (String msg : msgToPost) {
@@ -113,7 +124,7 @@ public class ServerToClientThread extends Thread {
 
 							} else if (userMsg[2].startsWith(IfClientServerProtocol.CREATE_CHANNEL)) {
 								if (login.equals(user.getLogin())) {
-									Salon salon = new Salon(userMsg[3], false);
+									Salon salon = new Salon(userMsg[3], user, false);
 
 									// ajout le salon dans la liste des salons
 									if (!serverSalon.getLstSalons().contains(salon)) {

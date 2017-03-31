@@ -89,8 +89,16 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 				receiveMessage(delUser, " quitte le salon !");
 			}
 		} else if (line.endsWith(IfClientServerProtocol.OK_CHANNEL)) {
+			
 			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
-			controleur.creerSalon(userMsg[2]);
+ 			if (userMsg[1].equals(this.login)) {
+ 				controleur.creerSalon(userMsg[2]);
+			}
+ 			else
+ 			{
+ 				receiveMessage(userMsg[1], "a crée le salon " + userMsg[2]);
+ 			}
+
 		} else {
 			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
 			String user = userMsg[1];

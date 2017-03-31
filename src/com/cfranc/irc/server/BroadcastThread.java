@@ -30,8 +30,10 @@ public class BroadcastThread extends Thread {
 			clientTreadsMap.put(user, serverToClientThread);
 			
 			for (Entry<User, ServerToClientThread> entry : clientTreadsMap.entrySet()) {
-			serverToClientThread.post(IfClientServerProtocol.ADD+entry.getKey().getLogin());   
+				serverToClientThread.post(IfClientServerProtocol.ADD+entry.getKey().getLogin());
 			} 
+			serverToClientThread.postListSalon();
+			
 		}
 		return res;
 	}

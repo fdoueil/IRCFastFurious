@@ -14,7 +14,7 @@ public class SalonLst  {
 		this.lstSalons = new ArrayList<Salon>();
 
 		// Création du salon "Général"
-		this.lstSalons.add(new Salon("Général",false));
+		this.lstSalons.add(new Salon("Général", null, false));
 
 	}
 
