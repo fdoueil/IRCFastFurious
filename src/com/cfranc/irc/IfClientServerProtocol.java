@@ -12,4 +12,5 @@ public interface IfClientServerProtocol {
 	public static final String OK_CHANNEL = "OK+C";
 	// sample for create channel 'Discussions' and joined user 'Paul' -> #Paul#C+U#Discussions
 	public static final String USER_JOIN_CHANNEL = "C+U";
+	public static final String OK_JOIN_CHANNEL = "OKC+U";
 }
