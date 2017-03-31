@@ -47,6 +47,25 @@ public class BroadcastThread extends Thread {
 		}
 	}
 	
+	public static void sendQuitUser (User sender, String msg) {
+		Collection<ServerToClientThread> clientTreads=clientTreadsMap.values();
+		Iterator<ServerToClientThread> receiverClientThreadIterator=clientTreads.iterator();
+		while (receiverClientThreadIterator.hasNext()) {
+			ServerToClientThread clientThread = (ServerToClientThread) receiverClientThreadIterator.next();
+			
+			System.out.println("sendMessage : "+ msg+sender.getLogin());
+
+			System.out.println(" sendQuitUser msg = " + msg);
+			System.out.println(" sendQuitUser sender.getlogin() =" + sender.getLogin());
+			System.out.println("sendMessage : "+ msg+sender.getLogin());
+			
+			clientThread.post(msg+sender.getLogin());
+			
+// 			System.out.println("sendMessage : "+ msg +);
+		}
+		
+	}
+	
 	public static void removeClient(User user){
 		clientTreadsMap.remove(user);
 	}

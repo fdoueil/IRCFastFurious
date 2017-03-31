@@ -81,7 +81,7 @@ public class ServerToClientThread extends Thread {
 						String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
 						String login = userMsg[1];
 						String msg = userMsg[2];
-						
+
 						done = msg.equals(".bye");
 						if (!done) {
 							if (login.equals(user)) {
@@ -92,6 +92,13 @@ public class ServerToClientThread extends Thread {
 							if (line.startsWith(IfClientServerProtocol.DEL)) {
 
 								clientListModel.removeElement(user.getLogin());
+
+								System.out.println("IfClientServerProtocol.DEL = " + IfClientServerProtocol.DEL);
+								System.out.println("user = " + user);
+								System.out.println("msg = " + msg);
+								// BroadcastThread.sendMessage(user,
+								// IfClientServerProtocol.DEL);
+								BroadcastThread.sendQuitUser(user, IfClientServerProtocol.DEL);
 
 								// BroadcastThread.sendMessage(user,
 								// IfClientServerProtocol.DEL);
@@ -139,11 +146,11 @@ public class ServerToClientThread extends Thread {
 				}
 			}
 			close();
-		}catch(
+		} catch (
 
-	IOException e)
-	{
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-}}
+}
