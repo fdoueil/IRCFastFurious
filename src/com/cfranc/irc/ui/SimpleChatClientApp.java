@@ -138,8 +138,8 @@ public class SimpleChatClientApp {
 		});
 	}
 	
-	public void creerSalon(String salonName){
-		this.frame.creerSalon(salonName);
+	public void creerSalon(String userName,String salonName){
+		this.frame.creerSalon(userName,salonName);
 	}
 	
 	public void hideClient() {
