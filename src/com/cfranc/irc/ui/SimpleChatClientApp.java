@@ -7,14 +7,17 @@ import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Scanner;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.ListModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Document;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
@@ -33,15 +36,21 @@ public class SimpleChatClientApp {
     String clientPwd;
     
 	private SimpleChatFrameClient frame;
-	public StyledDocument documentModel=new DefaultStyledDocument();
-	DefaultListModel<String> clientListModel=new DefaultListModel<String>();
 	
+	private HashMap<Integer, StyledDocument> hMapDocumentModel = new HashMap<Integer, StyledDocument>();
+	private HashMap<Integer, DefaultListModel<String>> hMapListModel = new HashMap<Integer, DefaultListModel<String>>();
+
     public static final String BOLD_ITALIC = "BoldItalic";
     public static final String GRAY_PLAIN = "Gray";
         
-	public static DefaultStyledDocument defaultDocumentModel() {
-		DefaultStyledDocument res=new DefaultStyledDocument();
-	    
+    public static DefaultListModel<String> createListModel(){
+    	DefaultListModel<String> res = new DefaultListModel<String>();
+    	return res;
+    }
+    
+	public static DefaultStyledDocument createDefaultDocumentModel() {
+		DefaultStyledDocument res=new DefaultStyledDocument();		
+	
 	    Style styleDefault = (Style) res.getStyle(StyleContext.DEFAULT_STYLE);
 	    
 	    res.addStyle(BOLD_ITALIC, styleDefault);
@@ -55,7 +64,7 @@ public class SimpleChatClientApp {
         StyleConstants.setBold(styleGP, false);
         StyleConstants.setItalic(styleGP, false);
         StyleConstants.setForeground(styleGP, Color.lightGray);
-
+	    
 		return res;
 	}
 
@@ -65,12 +74,25 @@ public class SimpleChatClientApp {
 		
 	}
 	
+	public HashMap<Integer, StyledDocument> gethMapDocumentModel() {
+		return hMapDocumentModel;
+	}
+
+	public HashMap<Integer, DefaultListModel<String>> gethMapListModel() {
+		return hMapListModel;
+	}
+
 	public void displayClient() {
+		//hMapDocumentModel.put(0, documentModel);
+		//hMapListModel.put(0, clientListModel);
 		
 		// Init GUI
-		this.frame=new SimpleChatFrameClient(clientToServerThread, clientListModel, documentModel);
+		this.frame=new SimpleChatFrameClient(clientToServerThread, hMapListModel, hMapDocumentModel);
 		this.frame.setTitle(this.frame.getTitle()+" : "+clientName+" connected to "+serverName+":"+serverPort);
 		((JFrame)this.frame).setVisible(true);
+		
+		
+		
 		this.frame.addWindowListener(new WindowListener() {
 			
 			@Override
@@ -143,7 +165,7 @@ public class SimpleChatClientApp {
 		try {
 			socketClientServer = new Socket(this.serverName, this.serverPort);
 			// Start connection services
-			clientToServerThread=new ClientToServerThread(this, documentModel, clientListModel,socketClientServer,clientName, clientPwd);
+			clientToServerThread=new ClientToServerThread(this, hMapDocumentModel, hMapListModel,socketClientServer,clientName, clientPwd);
 			clientToServerThread.start();
 
 			System.out.println("Connected: " + socketClientServer);
@@ -166,8 +188,7 @@ public class SimpleChatClientApp {
 
 					app.connectClient();
 					
-					app.displayClient();
-
+					app.displayClient();				
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
