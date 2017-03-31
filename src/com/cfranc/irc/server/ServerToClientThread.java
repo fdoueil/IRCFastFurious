@@ -8,44 +8,55 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
+
 import com.cfranc.irc.IfClientServerProtocol;
 
-public class ServerToClientThread extends Thread{
+public class ServerToClientThread extends Thread {
 	private User user;
 	private Socket socket = null;
 	private DataInputStream streamIn = null;
 	private DataOutputStream streamOut = null;
-	
+	DefaultListModel<String> clientListModel; // new HRAJ
+
 	public ServerToClientThread(User user, Socket socket) {
 		super();
-		this.user=user;
+		this.user = user;
 		this.socket = socket;
 	}
-	
-	List<String> msgToPost=new ArrayList<String>();
-	
-	public synchronized void post(String msg){
+
+	// new HRAJ
+	public ServerToClientThread(User user, Socket socket, DefaultListModel<String> clientListModel) {
+		super();
+		this.user = user;
+		this.socket = socket;
+		this.clientListModel = clientListModel;
+	}
+
+	List<String> msgToPost = new ArrayList<String>();
+
+	public synchronized void post(String msg) {
 		msgToPost.add(msg);
 	}
-	
-	private synchronized void doPost(){
+
+	private synchronized void doPost() {
 		try {
 			for (String msg : msgToPost) {
-					streamOut.writeUTF(msg);
+				streamOut.writeUTF(msg);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		finally{
+		} finally {
 			msgToPost.clear();
 		}
 	}
-	
+
 	public void open() throws IOException {
 		streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 		streamOut = new DataOutputStream(socket.getOutputStream());
 	}
+
 	public void close() throws IOException {
 		if (socket != null)
 			socket.close();
@@ -62,35 +73,46 @@ public class ServerToClientThread extends Thread{
 			boolean done = false;
 			while (!done) {
 				try {
-					if(streamIn.available()>0){
+					if (streamIn.available() > 0) {
 						// Parsing du message avec le séparateur du protocole
 						String line = streamIn.readUTF();
-						String[] userMsg=line.split(IfClientServerProtocol.SEPARATOR);
-						String login=userMsg[1];
-						String msg=userMsg[2];
+						String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
+						String login = userMsg[1];
+						String msg = userMsg[2];
 						// Creer Salon
 						if (userMsg[2].startsWith(IfClientServerProtocol.CREATE_CHANNEL)) {
-							if(login.equals(user.getLogin())){
-								Salon salon = new Salon(userMsg[3],false);
+							if (login.equals(user.getLogin())) {
+								Salon salon = new Salon(userMsg[3], false);
 								user.getSalons().add(salon);
 								// Acquittement de la création du salon
 								BroadcastThread.sendMessage(user,salon.getNomSalon()+IfClientServerProtocol.SEPARATOR+IfClientServerProtocol.OK_CHANNEL);
+
 							}
 						}
 						done = msg.equals(".bye");
-						if(!done){
-							if(login.equals(user)){
-								System.err.println("ServerToClientThread::run(), login!=user"+login);
+						if (!done) {
+							if (login.equals(user)) {
+								System.err.println("ServerToClientThread::run(), login!=user" + login);
 							}
 							// Renvoi du message aux clients
-							BroadcastThread.sendMessage(user,msg);
+							BroadcastThread.sendMessage(user, msg);
 						}
-					}
-					else{
+						//+ HRAJ
+						
+						System.out.println("line.startsWith(IfClientServerProtocol.DEL= " + line.startsWith(IfClientServerProtocol.DEL));
+						System.out.println("user= " + user);
+						
+						if (line.startsWith(IfClientServerProtocol.DEL)) {
+
+							clientListModel.removeElement(user.getLogin());
+
+							BroadcastThread.removeClient(user);
+						}
+
+					} else {
 						doPost();
 					}
-				} 
-				catch (IOException ioe) {
+				} catch (IOException ioe) {
 					done = true;
 				}
 			}
@@ -100,5 +122,4 @@ public class ServerToClientThread extends Thread{
 			e.printStackTrace();
 		}
 	}
-
 }
