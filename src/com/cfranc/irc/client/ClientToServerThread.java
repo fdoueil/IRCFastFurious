@@ -7,9 +7,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.HashMap;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ListModel;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
 
@@ -26,16 +29,23 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 	DefaultListModel<String> clientListModel;
 	StyledDocument documentModel;
 	SimpleChatClientApp controleur;
+	private HashMap<Integer, StyledDocument> hMapDocumentModel;
+	private HashMap<Integer, DefaultListModel<String>> hMapListModel;
 
-	public ClientToServerThread(SimpleChatClientApp controleur, StyledDocument documentModel,
-			DefaultListModel<String> clientListModel, Socket socket, String login, String pwd) {
+
+	
+
+	public ClientToServerThread(SimpleChatClientApp controleur, HashMap<Integer, StyledDocument> hMapDocumentModel,
+			HashMap<Integer, DefaultListModel<String>> hMapListModel, Socket socket, String login, String pwd) {
 		super();
-		this.documentModel = documentModel;
-		this.clientListModel = clientListModel;
+		//this.documentModel = document;
+		//this.clientListModel = clientListModel;
+		this.hMapDocumentModel = hMapDocumentModel;
+		this.hMapListModel = hMapListModel;
 		this.socket = socket;
 		this.login = login;
 		this.pwd = pwd;
-		this.controleur = controleur;
+		this.controleur = controleur;		
 	}
 
 	public void open() throws IOException {
@@ -54,15 +64,15 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 	}
 
 	public void receiveMessage(String user, String line) {
-		Style styleBI = ((StyledDocument) documentModel).getStyle(SimpleChatClientApp.BOLD_ITALIC);
-		Style styleGP = ((StyledDocument) documentModel).getStyle(SimpleChatClientApp.GRAY_PLAIN);
+		Style styleBI = ((StyledDocument) hMapDocumentModel.get(0)).getStyle(SimpleChatClientApp.BOLD_ITALIC);
+		Style styleGP = ((StyledDocument) hMapDocumentModel.get(0)).getStyle(SimpleChatClientApp.GRAY_PLAIN);
 		receiveMessage(user, line, styleBI, styleGP);
 	}
 
 	public void receiveMessage(String user, String line, Style styleBI, Style styleGP) {
 		try {
-			documentModel.insertString(documentModel.getLength(), user + " : ", styleBI);
-			documentModel.insertString(documentModel.getLength(), line + "\n", styleGP);
+			hMapDocumentModel.get(0).insertString(hMapDocumentModel.get(0).getLength(), user + " : ", styleBI);
+			hMapDocumentModel.get(0).insertString(hMapDocumentModel.get(0).getLength(), line + "\n", styleGP);
 		} catch (BadLocationException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -78,14 +88,14 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 
 		if (line.startsWith(IfClientServerProtocol.ADD)) {
 			String newUser = line.substring(IfClientServerProtocol.ADD.length());
-			if (!clientListModel.contains(newUser)) {
-				clientListModel.addElement(newUser);
+			if (!hMapListModel.get(0).contains(newUser)) {
+				hMapListModel.get(0).addElement(newUser);
 				receiveMessage(newUser, " entre dans le salon...");
 			}
 		} else if (line.startsWith(IfClientServerProtocol.DEL)) {
 			String delUser = line.substring(IfClientServerProtocol.DEL.length());
-			if (clientListModel.contains(delUser)) {
-				clientListModel.removeElement(delUser);
+			if (hMapListModel.get(0).contains(delUser)) {
+				hMapListModel.get(0).removeElement(delUser);
 				receiveMessage(delUser, " quitte le salon !");
 			}
 		} else if (line.endsWith(IfClientServerProtocol.OK_CHANNEL)) {
