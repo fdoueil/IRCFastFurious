@@ -102,7 +102,7 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 			
 			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
  			if (userMsg[1].equals(this.login)) {
- 				controleur.creerSalon(userMsg[2]);
+ 				controleur.creerSalon(userMsg[1],userMsg[2]);
 			}
  			else
  			{
