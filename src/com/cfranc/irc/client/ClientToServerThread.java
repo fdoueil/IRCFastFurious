@@ -107,6 +107,7 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
  			else
  			{
  				receiveMessage(userMsg[1], "a crée le salon " + userMsg[2]);
+ 				controleur.creerSalonJoignable(userMsg[1],userMsg[2]);
  			}
 
 		} else {

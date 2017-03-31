@@ -69,7 +69,9 @@ public class SimpleChatFrameClient extends JFrame {
 	private final ResourceAction sendAction = new SendAction();
 	private final ResourceAction lockAction = new LockAction();
 	private JTabbedPane tabbedPane;
-	private HashMap<Integer, StyledDocument> hMapDocumentModel; 
+
+	private JComboBox cbSalonJoignable;
+	private HashMap<Integer, StyledDocument> hMapDocumentModel;
 	private HashMap<Integer, DefaultListModel<String>> hMapListModel;
 
 	private boolean isScrollLocked = true;
@@ -123,28 +125,27 @@ public class SimpleChatFrameClient extends JFrame {
 		// UNIQUEMENT POUR LE DESIGNER
 		this(null, new HashMap<Integer, DefaultListModel<String>>(), new HashMap<Integer, StyledDocument>());
 	}
-	
-	private void ajoutSalon(Integer idSalon){
+
+	private void ajoutSalon(Integer idSalon) {
 		DefaultListModel<String> value = SimpleChatClientApp.createListModel();
-		this.hMapListModel.put(idSalon, value );
+		this.hMapListModel.put(idSalon, value);
 		StyledDocument value1 = SimpleChatClientApp.createDefaultDocumentModel();
 		this.hMapDocumentModel.put(idSalon, value1);
-	}	
+	}
 
 	/**
 	 * Create the frame.
 	 */
-	public SimpleChatFrameClient(
-			IfSenderModel sender, 
-			HashMap<Integer, DefaultListModel<String>> hMapListModel, 
+	public SimpleChatFrameClient(IfSenderModel sender, HashMap<Integer, DefaultListModel<String>> hMapListModel,
 			HashMap<Integer, StyledDocument> hMapDocumentModel) {
 		this.sender = sender;
-		
-		// Initialisation de la reference local aux models et création du salon ZERO
+
+		// Initialisation de la reference local aux models et création du salon
+		// ZERO
 		this.hMapListModel = hMapListModel;
-		this.hMapDocumentModel = hMapDocumentModel;		
+		this.hMapDocumentModel = hMapDocumentModel;
 		ajoutSalon(0);
-		
+
 		setTitle(Messages.getString("SimpleChatFrameClient.4")); //$NON-NLS-1$
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -229,18 +230,16 @@ public class SimpleChatFrameClient extends JFrame {
 			}
 		});
 		toolBar.add(btnNouveauSalon);
-		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setEnabled(false);
-		comboBox.setMinimumSize(new Dimension(20, 22));
-		comboBox.setMaximumRowCount(100);
-		comboBox.setEditable(true);
-		comboBox.setSize(10, 10);
-		
-		toolBar.add(comboBox);
-		
-		JButton btnNewButton = new JButton(Messages.getString("SimpleChatFrameClient.btnNewButton.text")); //$NON-NLS-1$
-		btnNewButton.setEnabled(false);
+
+		cbSalonJoignable = new JComboBox();
+		cbSalonJoignable.setMinimumSize(new Dimension(20, 22));
+		cbSalonJoignable.setMaximumRowCount(100);
+		cbSalonJoignable.setEditable(true);
+		cbSalonJoignable.setSize(10, 10);
+
+		toolBar.add(cbSalonJoignable);
+
+		JButton btnNewButton = new JButton(Messages.getString("SimpleChatFrameClient.btnNewButton.text"));
 		toolBar.add(btnNewButton);
 
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -254,7 +253,8 @@ public class SimpleChatFrameClient extends JFrame {
 		list.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				int iFirstSelectedElement = ((JList) e.getSource()).getSelectedIndex();
-				if (iFirstSelectedElement >= 0 && iFirstSelectedElement < SimpleChatFrameClient.this.hMapListModel.get(0).getSize()) {
+				if (iFirstSelectedElement >= 0
+						&& iFirstSelectedElement < SimpleChatFrameClient.this.hMapListModel.get(0).getSize()) {
 					senderName = SimpleChatFrameClient.this.hMapListModel.get(0).getElementAt(iFirstSelectedElement);
 					getLblSender().setText(senderName);
 				} else {
@@ -300,13 +300,17 @@ public class SimpleChatFrameClient extends JFrame {
 		}
 	}
 
-	public void creerSalon(String userName,String salonName) {
-		Integer key=1;
+	public void creerSalonJoignable(String userName, String salonName) {
+		cbSalonJoignable.addItem(salonName);
+	}
+
+	public void creerSalon(String userName, String salonName) {
+		Integer key = 1;
 		ajoutSalon(key);
-		Document documentModel=this.hMapDocumentModel.get(key);
-		ListModel<String> listModel=this.hMapListModel.get(key);
+		Document documentModel = this.hMapDocumentModel.get(key);
+		ListModel<String> listModel = this.hMapListModel.get(key);
 		this.hMapListModel.get(key).addElement(userName);
-		
+
 		JSplitPane splitPane2 = new JSplitPane();
 		tabbedPane.addTab(salonName, null, splitPane2, null);
 
