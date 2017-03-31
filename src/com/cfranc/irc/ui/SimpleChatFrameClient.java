@@ -9,6 +9,7 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Scanner;
 
 import javax.swing.AbstractAction;
@@ -47,6 +48,7 @@ import javax.swing.text.StyledDocument;
 
 import com.cfranc.irc.IfClientServerProtocol;
 import com.cfranc.irc.client.IfSenderModel;
+import com.cfranc.irc.server.Salon;
 
 import javax.swing.JPopupMenu;
 
@@ -144,6 +146,7 @@ public class SimpleChatFrameClient extends JFrame {
 		// ZERO
 		this.hMapListModel = hMapListModel;
 		this.hMapDocumentModel = hMapDocumentModel;
+
 		ajoutSalon(0);
 
 		setTitle(Messages.getString("SimpleChatFrameClient.4")); //$NON-NLS-1$
@@ -308,6 +311,10 @@ public class SimpleChatFrameClient extends JFrame {
 
 	public void creerSalonJoignable(String userName, String salonName) {
 		cbSalonJoignable.addItem(salonName);
+	}
+
+	public void ajouterUserSalon(String userLogin, int indexSalon) {
+		this.hMapListModel.get(indexSalon).addElement(userLogin);
 	}
 
 	public void creerSalon(String userName, String salonName) {

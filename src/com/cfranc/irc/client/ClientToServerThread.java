@@ -18,6 +18,7 @@ import javax.swing.text.StyledDocument;
 
 import com.cfranc.irc.IfClientServerProtocol;
 import com.cfranc.irc.server.BroadcastThread;
+import com.cfranc.irc.server.Salon;
 import com.cfranc.irc.ui.SimpleChatClientApp;
 
 public class ClientToServerThread extends Thread implements IfSenderModel {
@@ -32,20 +33,17 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 	private HashMap<Integer, StyledDocument> hMapDocumentModel;
 	private HashMap<Integer, DefaultListModel<String>> hMapListModel;
 
-
-	
-
 	public ClientToServerThread(SimpleChatClientApp controleur, HashMap<Integer, StyledDocument> hMapDocumentModel,
 			HashMap<Integer, DefaultListModel<String>> hMapListModel, Socket socket, String login, String pwd) {
 		super();
-		//this.documentModel = document;
-		//this.clientListModel = clientListModel;
+		// this.documentModel = document;
+		// this.clientListModel = clientListModel;
 		this.hMapDocumentModel = hMapDocumentModel;
 		this.hMapListModel = hMapListModel;
 		this.socket = socket;
 		this.login = login;
 		this.pwd = pwd;
-		this.controleur = controleur;		
+		this.controleur = controleur;
 	}
 
 	public void open() throws IOException {
@@ -82,9 +80,8 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 	void readMsg() throws IOException {
 		String line = streamIn.readUTF();
 		System.out.println(line);
-		
+
 		System.out.println("suppression client ");
-			
 
 		if (line.startsWith(IfClientServerProtocol.ADD)) {
 			String newUser = line.substring(IfClientServerProtocol.ADD.length());
@@ -99,21 +96,31 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 				receiveMessage(delUser, " quitte le salon !");
 			}
 		} else if (line.endsWith(IfClientServerProtocol.OK_CHANNEL)) {
-			
-			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
- 			if (userMsg[1].equals(this.login)) {
- 				controleur.creerSalon(userMsg[1],userMsg[2]);
-			}
- 			else
- 			{
- 				receiveMessage(userMsg[1], "a crée le salon " + userMsg[2]);
- 				controleur.creerSalonJoignable(userMsg[1],userMsg[2]);
- 			}
 
-		} else if (line.endsWith(IfClientServerProtocol.OK_JOIN_CHANNEL)) { 
 			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
-			receiveMessage(userMsg[1], " a rejoint le salon " +userMsg[2]);
-		}else {
+			if (userMsg[1].equals(this.login)) {
+				controleur.creerSalon(userMsg[1], userMsg[2]);
+			} else {
+				receiveMessage(userMsg[1], "a crée le salon " + userMsg[2]);
+				controleur.creerSalonJoignable(userMsg[1], userMsg[2]);
+			}
+			Salon newSalon=new Salon(userMsg[2], null, false);
+			newSalon.gethUsersLogin().add(userMsg[1]);
+			controleur.gethSalons().getLstSalons().add(newSalon);
+
+		} else if (line.endsWith(IfClientServerProtocol.OK_JOIN_CHANNEL)) {
+			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
+			receiveMessage(userMsg[1], " a rejoint le salon " + userMsg[2]);
+
+			int indexSalon= controleur.gethSalons().findSalonIndexByName(userMsg[2]);
+			if (userMsg[1].equals(this.login)) {
+				controleur.creerSalon(userMsg[1], userMsg[2]);
+				Salon salon = controleur.gethSalons().get(indexSalon);
+				salon.gethUsersLogin().add(userMsg[1]);
+				
+			}
+			controleur.ajouterUserSalon(userMsg[1],indexSalon);
+		} else {
 			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
 			String user = userMsg[1];
 			receiveMessage(user, userMsg[2]);

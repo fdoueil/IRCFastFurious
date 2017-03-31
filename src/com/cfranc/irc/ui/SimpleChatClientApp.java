@@ -27,6 +27,7 @@ import javax.swing.text.StyledDocument;
 import com.cfranc.irc.client.ClientToServerThread;
 import com.cfranc.irc.server.ClientConnectThread;
 import com.cfranc.irc.server.Salon;
+import com.cfranc.irc.server.SalonLst;
 
 public class SimpleChatClientApp {
 	static String[] ConnectOptionNames = { "Connect" };
@@ -42,7 +43,7 @@ public class SimpleChatClientApp {
 	private HashMap<Integer, StyledDocument> hMapDocumentModel = new HashMap<Integer, StyledDocument>();
 	private HashMap<Integer, DefaultListModel<String>> hMapListModel = new HashMap<Integer, DefaultListModel<String>>();
 
-	private HashSet<Salon> hSalons = new HashSet<Salon>();
+	private SalonLst hSalons;
 
 	public static final String BOLD_ITALIC = "BoldItalic";
 	public static final String GRAY_PLAIN = "Gray";
@@ -75,7 +76,7 @@ public class SimpleChatClientApp {
 	private static ClientToServerThread clientToServerThread;
 
 	public SimpleChatClientApp() {
-
+		this.hSalons = new SalonLst();
 	}
 
 	public HashMap<Integer, StyledDocument> gethMapDocumentModel() {
@@ -147,11 +148,15 @@ public class SimpleChatClientApp {
 
 	public void creerSalonJoignable(String userName, String salonName) {
 		this.frame.creerSalonJoignable(userName, salonName);
-		Salon newSalon = new Salon(salonName,null,false);
+		Salon newSalon = new Salon(salonName, null, false);
 		newSalon.gethUsersLogin().add(userName);
-		hSalons.add(newSalon);
+		hSalons.getLstSalons().add(newSalon);
 	}
 
+	public void ajouterUserSalon(String userLogin, int indexSalon) {
+		this.frame.ajouterUserSalon(userLogin, indexSalon);
+	}
+	
 	public void hideClient() {
 
 		// Init GUI
@@ -225,6 +230,10 @@ public class SimpleChatClientApp {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public SalonLst gethSalons() {
+		return hSalons;
 	}
 
 }
