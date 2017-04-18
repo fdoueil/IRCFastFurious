@@ -126,12 +126,15 @@ public class SimpleChatClientApp {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				// TODO Auto-generated method stub
+				System.out.println("windowClosing");
+				quitApp(SimpleChatClientApp.this);
 
 			}
 
 			@Override
 			public void windowClosed(WindowEvent e) {
 				quitApp(SimpleChatClientApp.this);
+				System.out.println("windowClosed");
 			}
 
 			@Override
@@ -156,7 +159,7 @@ public class SimpleChatClientApp {
 	public void ajouterUserSalon(String userLogin, int indexSalon) {
 		this.frame.ajouterUserSalon(userLogin, indexSalon);
 	}
-	
+
 	public void hideClient() {
 
 		// Init GUI

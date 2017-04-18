@@ -143,7 +143,7 @@ public class ServerToClientThread extends Thread {
 								System.out.println("Message sur un channel !");
 								int indexSalon = 0;
 								indexSalon = serverSalon.findSalonIndexByName(userMsg[3]);
-								
+
 							} else {
 								BroadcastThread.sendMessage(user, msg);
 							}
@@ -155,7 +155,6 @@ public class ServerToClientThread extends Thread {
 							System.out.println("msg = " + msg);
 							BroadcastThread.sendQuitUser(user, IfClientServerProtocol.DEL);
 							BroadcastThread.removeClient(user);
-
 						}
 
 						// + HRAJ
