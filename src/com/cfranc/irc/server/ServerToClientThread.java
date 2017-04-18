@@ -147,10 +147,18 @@ public class ServerToClientThread extends Thread {
 							} else {
 								BroadcastThread.sendMessage(user, msg);
 							}
+						} else {
+							clientListModel.removeElement(user.getLogin());
+
+							System.out.println("IfClientServerProtocol.DEL = " + IfClientServerProtocol.DEL);
+							System.out.println("user = " + user);
+							System.out.println("msg = " + msg);
+							BroadcastThread.sendQuitUser(user, IfClientServerProtocol.DEL);
+							BroadcastThread.removeClient(user);
+
 						}
 
 						// + HRAJ
-
 						System.out.println("line.startsWith(IfClientServerProtocol.DEL= "
 								+ line.startsWith(IfClientServerProtocol.DEL));
 						System.out.println("user= " + user);
