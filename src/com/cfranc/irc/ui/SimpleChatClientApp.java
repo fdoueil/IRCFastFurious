@@ -148,7 +148,7 @@ public class SimpleChatClientApp {
 
 	public void creerSalonJoignable(String userName, String salonName) {
 		this.frame.creerSalonJoignable(userName, salonName);
-		Salon newSalon = new Salon(salonName, null, false);
+		Salon newSalon = new Salon(salonName, userName, false);
 		newSalon.gethUsersLogin().add(userName);
 		hSalons.getLstSalons().add(newSalon);
 	}

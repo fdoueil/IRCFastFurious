@@ -42,7 +42,7 @@ public class Salon {
 		this.bPrivate = bPrivate;
 	}
 
-	public Salon(String nomSalon, User userCreator, boolean bPrivate) {
+	public Salon(String nomSalon, String userCreator, boolean bPrivate) {
 		super();
 		this.nomSalon = nomSalon;
 		this.bPrivate = bPrivate;
@@ -50,7 +50,17 @@ public class Salon {
 		this.hUsersLogin = new HashSet<String>();
 	}
 
-	protected User userCreator = null; // need it ?
+	//protected User userCreator = null; // need it ?
+
+	protected String userCreator;
+	
+	public String getUserCreator() {
+		return userCreator;
+	}
+
+	public void setUserCreator(String userCreator) {
+		this.userCreator = userCreator;
+	}
 
 	protected HashSet<String> hUsersLogin;
 
