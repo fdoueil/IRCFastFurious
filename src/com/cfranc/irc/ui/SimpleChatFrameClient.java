@@ -120,7 +120,13 @@ public class SimpleChatFrameClient extends JFrame {
 	}
 
 	public void sendMessage() {
-		sender.setMsgToSend(textField.getText());
+		// si onglet Général
+		if (tabbedPane.getSelectedIndex() == 0) {
+			sender.setMsgToSend(textField.getText());
+		} else {
+			sender.setMsgToSend(IfClientServerProtocol.USER_MESSAGE_CHANNEL + IfClientServerProtocol.SEPARATOR
+					+ tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()) + IfClientServerProtocol.SEPARATOR + textField.getText());
+		}
 	}
 
 	public SimpleChatFrameClient() {

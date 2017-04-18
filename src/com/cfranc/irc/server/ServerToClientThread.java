@@ -134,12 +134,16 @@ public class ServerToClientThread extends Thread {
 
 									// ajout le salon dans la liste des salons
 									serverSalon.get(indexSalon).hUsersLogin.add(userMsg[1]);
-									
+
 									// Acquittement de la création du salon
-									BroadcastThread.sendMessage(user,
-											userMsg[3] + IfClientServerProtocol.SEPARATOR
-													+ IfClientServerProtocol.OK_JOIN_CHANNEL);
+									BroadcastThread.sendMessage(user, userMsg[3] + IfClientServerProtocol.SEPARATOR
+											+ IfClientServerProtocol.OK_JOIN_CHANNEL);
 								}
+							} else if (userMsg[2].startsWith(IfClientServerProtocol.USER_MESSAGE_CHANNEL)) {
+								System.out.println("Message sur un channel !");
+								int indexSalon = 0;
+								indexSalon = serverSalon.findSalonIndexByName(userMsg[3]);
+								
 							} else {
 								BroadcastThread.sendMessage(user, msg);
 							}
