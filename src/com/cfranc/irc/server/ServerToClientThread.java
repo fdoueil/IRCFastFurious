@@ -148,19 +148,27 @@ public class ServerToClientThread extends Thread {
 								BroadcastThread.sendMessage(user, msg);
 							}
 						} else {
-							clientListModel.removeElement(user.getLogin());
 
-							System.out.println("IfClientServerProtocol.DEL = " + IfClientServerProtocol.DEL);
-							System.out.println("user = " + user);
-							System.out.println("msg = " + msg);
-							BroadcastThread.sendQuitUser(user, IfClientServerProtocol.DEL);
-							BroadcastThread.removeClient(user);
+							for (Salon salon : serverSalon.getLstSalons()) {
+								System.out.println("boucle des salons");
+								if (salon.getNomSalon() == "Général") {
+									clientListModel.removeElement(user.getLogin());
+
+									System.out.println("IfClientServerProtocol.DEL = " + IfClientServerProtocol.DEL);
+									System.out.println("user.getLogin = " + user.getLogin());
+									System.out.println("msg = " + msg);
+
+									BroadcastThread.sendQuitUser(user, IfClientServerProtocol.DEL);
+									BroadcastThread.removeClient(user);
+								}
+							}
 						}
 
 						// + HRAJ
 						System.out.println("line.startsWith(IfClientServerProtocol.DEL= "
 								+ line.startsWith(IfClientServerProtocol.DEL));
-						System.out.println("user= " + user);
+
+						System.out.println("user= " + user.getLogin());
 						System.out.println("msg= " + msg);
 
 					} else {
