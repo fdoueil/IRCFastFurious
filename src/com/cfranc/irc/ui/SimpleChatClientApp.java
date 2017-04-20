@@ -96,7 +96,8 @@ public class SimpleChatClientApp {
 		this.frame.setTitle(
 				this.frame.getTitle() + " : " + clientName + " connected to " + serverName + ":" + serverPort);
 		((JFrame) this.frame).setVisible(true);
-
+		this.frame.sethSalons(hSalons);
+		
 		this.frame.addWindowListener(new WindowListener() {
 
 			@Override

@@ -1,6 +1,7 @@
 package com.cfranc.irc.server;
 
 import java.util.HashSet;
+import java.util.Iterator;
 
 public class Salon {
 
@@ -50,10 +51,10 @@ public class Salon {
 		this.hUsersLogin = new HashSet<String>();
 	}
 
-	//protected User userCreator = null; // need it ?
+	// protected User userCreator = null; // need it ?
 
 	protected String userCreator;
-	
+
 	public String getUserCreator() {
 		return userCreator;
 	}
@@ -68,4 +69,20 @@ public class Salon {
 		return hUsersLogin;
 	}
 
+	public boolean userExistSalon(String userLogin) {
+		boolean res = false;
+		for (String s : this.gethUsersLogin()) {
+					if (s.equals(userLogin)) {
+				return true;
+			}
+		}
+		return res;
+	}
+
+	public void allUser() {
+		for (String s : this.gethUsersLogin()) {
+			System.out.println("s=" + s);
+				}
+		
+	}
 }

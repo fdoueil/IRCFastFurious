@@ -49,6 +49,7 @@ import javax.swing.text.StyledDocument;
 import com.cfranc.irc.IfClientServerProtocol;
 import com.cfranc.irc.client.IfSenderModel;
 import com.cfranc.irc.server.Salon;
+import com.cfranc.irc.server.SalonLst;
 
 import javax.swing.JPopupMenu;
 
@@ -75,6 +76,15 @@ public class SimpleChatFrameClient extends JFrame {
 	private JComboBox cbSalonJoignable;
 	private HashMap<Integer, StyledDocument> hMapDocumentModel;
 	private HashMap<Integer, DefaultListModel<String>> hMapListModel;
+	private SalonLst hSalons;
+	
+	public SalonLst gethSalons() {
+		return hSalons;
+	}
+
+	public void sethSalons(SalonLst hSalons) {
+		this.hSalons = hSalons;
+	}
 
 	private boolean isScrollLocked = true;
 
@@ -320,6 +330,8 @@ public class SimpleChatFrameClient extends JFrame {
 	}
 
 	public void ajouterUserSalon(String userLogin, int indexSalon) {
+		System.out.println("ajouterusersalon" + userLogin + indexSalon);
+		
 		this.hMapListModel.get(indexSalon).addElement(userLogin);
 	}
 

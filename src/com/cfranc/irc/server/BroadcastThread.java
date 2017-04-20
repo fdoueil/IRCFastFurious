@@ -49,6 +49,26 @@ public class BroadcastThread extends Thread {
 		}
 	}
 	
+	public static void sendMessageSalon(Salon salon,User sender, String msg) {
+		Collection<ServerToClientThread> clientTreads=clientTreadsMap.values();
+		Iterator<ServerToClientThread> receiverClientThreadIterator=clientTreads.iterator();
+		while (receiverClientThreadIterator.hasNext()) {
+			ServerToClientThread clientThread = (ServerToClientThread) receiverClientThreadIterator.next();
+			//si user est dans le salon
+			System.out.println("TAG:" + clientThread.getUser().getLogin());
+			
+			salon.allUser();
+			if (salon.userExistSalon(clientThread.getUser().getLogin())) {
+				// #Bill#C+MSG#Discussions#Message
+				clientThread.post(IfClientServerProtocol.SEPARATOR +sender.getLogin()+ 
+						IfClientServerProtocol.SEPARATOR +salon.getNomSalon() + 
+						IfClientServerProtocol.SEPARATOR + msg + IfClientServerProtocol.SEPARATOR +IfClientServerProtocol.USER_MESSAGE_CHANNEL);
+				//System.out.println("ENVOI:" + clientThread.getUser().getLogin());
+			}				
+			System.out.println("sendMessage : "+"#"+sender.getLogin()+"#"+msg);
+		}
+	}
+	
 	public static void sendQuitUser (User sender, String msg) {
 		Collection<ServerToClientThread> clientTreads=clientTreadsMap.values();
 		Iterator<ServerToClientThread> receiverClientThreadIterator=clientTreads.iterator();
