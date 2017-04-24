@@ -364,12 +364,12 @@ public class SimpleChatFrameClient extends JFrame {
 		this.hMapListModel.get(indexSalon).addElement(userLogin);
 	}
 
-	public void creerSalon(String userName, String salonName) {
-		Integer key = 1;
-		ajoutSalon(key);
-		Document documentModel = this.hMapDocumentModel.get(key);
-		ListModel<String> listModel = this.hMapListModel.get(key);
-		this.hMapListModel.get(key).addElement(userName);
+	public void creerSalon(String userName, String salonName, int indexSalon) {
+		//Integer key = 1;
+		ajoutSalon(indexSalon);
+		Document documentModel = this.hMapDocumentModel.get(indexSalon);
+		ListModel<String> listModel = this.hMapListModel.get(indexSalon);
+		this.hMapListModel.get(indexSalon).addElement(userName);
 
 		JSplitPane splitPane2 = new JSplitPane();
 		tabbedPane.addTab(salonName, null, splitPane2, null);

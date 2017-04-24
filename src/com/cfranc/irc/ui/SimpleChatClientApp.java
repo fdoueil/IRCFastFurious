@@ -148,8 +148,8 @@ public class SimpleChatClientApp {
 		});
 	}
 
-	public void creerSalon(String userName, String salonName) {
-		this.frame.creerSalon(userName, salonName);
+	public void creerSalon(String userName, String salonName, int indexSalon) {
+		this.frame.creerSalon(userName, salonName, indexSalon);
 	}
 
 	public void creerSalonJoignable(String userName, String salonName) {

@@ -110,10 +110,10 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 	
 			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
 			if (userMsg[1].equals(this.login)) {
-				controleur.creerSalon(userMsg[1], userMsg[2]);
 				Salon newSalon=new Salon(userMsg[2], userMsg[1], false);
 				newSalon.gethUsersLogin().add(userMsg[1]);
 				controleur.gethSalons().getLstSalons().add(newSalon);
+				controleur.creerSalon(userMsg[1], userMsg[2],controleur.gethSalons().findSalonIndexByName(userMsg[2]));
 			} else {	
 				controleur.creerSalonJoignable(userMsg[1], userMsg[2]);
 			}
@@ -125,7 +125,7 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 
 			int indexSalon= controleur.gethSalons().findSalonIndexByName(userMsg[2]);
 			if (userMsg[1].equals(this.login)) {
-				controleur.creerSalon(userMsg[1], userMsg[2]);
+				controleur.creerSalon(userMsg[1], userMsg[2], indexSalon);
 				Salon salon = controleur.gethSalons().get(indexSalon);
 				salon.gethUsersLogin().add(userMsg[1]);
 				controleur.ajouterUserSalon(salon.getUserCreator(),indexSalon);
@@ -139,7 +139,7 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
 			controleur.gethSalons().getLstSalons().add(new Salon(userMsg[3],userMsg[1],true));
 			int indexSalon= controleur.gethSalons().findSalonIndexByName(userMsg[3]);
-			controleur.creerSalon(userMsg[1], userMsg[3]);
+			controleur.creerSalon(userMsg[1], userMsg[3], indexSalon);
 			controleur.ajouterUserSalon(userMsg[2],indexSalon);
 		} else {
 			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
