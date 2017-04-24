@@ -134,8 +134,13 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 			}
 		} else if (line.endsWith(IfClientServerProtocol.USER_MESSAGE_CHANNEL)){ 
 			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
-			System.out.println("1" +userMsg[2] +"2"+userMsg[1] +"3" +userMsg[3]+ "longueur " + String.valueOf(userMsg.length)); 
 			receiveMessageSalon(userMsg[2],userMsg[1],userMsg[3]);
+		}else if (line.endsWith(IfClientServerProtocol.CREATE_CHANNEL+IfClientServerProtocol.CHANNEL_PRIVATE)) {
+			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
+			controleur.gethSalons().getLstSalons().add(new Salon(userMsg[3],userMsg[1],true));
+			int indexSalon= controleur.gethSalons().findSalonIndexByName(userMsg[3]);
+			controleur.creerSalon(userMsg[1], userMsg[3]);
+			controleur.ajouterUserSalon(userMsg[2],indexSalon);
 		} else {
 			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
 			String user = userMsg[1];

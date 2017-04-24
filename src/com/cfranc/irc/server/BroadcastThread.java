@@ -69,6 +69,25 @@ public class BroadcastThread extends Thread {
 		}
 	}
 	
+	public static void sendMessageSalonPrivate(String salon,String user0, String user1) {
+		Collection<ServerToClientThread> clientTreads=clientTreadsMap.values();
+		Iterator<ServerToClientThread> receiverClientThreadIterator=clientTreads.iterator();
+		while (receiverClientThreadIterator.hasNext()) {
+			ServerToClientThread clientThread = (ServerToClientThread) receiverClientThreadIterator.next();
+
+			if (clientThread.getUser().getLogin().equals(user0) || clientThread.getUser().getLogin().equals(user1)) {
+				// #Bill#C+MSG#Discussions#Message
+				String msg = IfClientServerProtocol.SEPARATOR +
+						user0 + IfClientServerProtocol.SEPARATOR + user1 +
+						IfClientServerProtocol.SEPARATOR + salon + 
+						IfClientServerProtocol.SEPARATOR +
+						IfClientServerProtocol.CREATE_CHANNEL+IfClientServerProtocol.CHANNEL_PRIVATE;
+				clientThread.post(msg);
+				System.out.println(msg);
+			}				
+
+		}
+	}
 	public static void sendQuitUser (User sender, String msg) {
 		Collection<ServerToClientThread> clientTreads=clientTreadsMap.values();
 		Iterator<ServerToClientThread> receiverClientThreadIterator=clientTreads.iterator();

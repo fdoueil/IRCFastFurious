@@ -98,6 +98,8 @@ public class SimpleChatClientApp {
 		((JFrame) this.frame).setVisible(true);
 		this.frame.sethSalons(hSalons);
 		
+		this.frame.setUserName(clientName);
+		
 		this.frame.addWindowListener(new WindowListener() {
 
 			@Override

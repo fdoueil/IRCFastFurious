@@ -10,6 +10,7 @@ public interface IfClientServerProtocol {
 	// sample for create channel 'Discussions' and creator user 'John' ->
 	// #John#+C#Discussions
 	public static final String CREATE_CHANNEL = "+C";
+	public static final String CHANNEL_PRIVATE = "$P";
 	public static final String OK_CHANNEL = "OK+C";
 	// sample for create channel 'Discussions' and joined user 'Paul' ->
 	// #Paul#C+U#Discussions
@@ -18,4 +19,5 @@ public interface IfClientServerProtocol {
 	// sample for message on channel 'Discussions' and joined user 'Bill' ->
 	// #Bill#C+MSG#Discussions#Message
 	public static final String USER_MESSAGE_CHANNEL = "C+MSG";
+	
 }
