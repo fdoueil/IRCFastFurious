@@ -49,6 +49,7 @@ import javax.swing.text.StyledDocument;
 import com.cfranc.irc.IfClientServerProtocol;
 import com.cfranc.irc.client.IfSenderModel;
 import com.cfranc.irc.server.Salon;
+import com.cfranc.irc.server.SalonLst;
 
 import javax.swing.JPopupMenu;
 
@@ -75,6 +76,25 @@ public class SimpleChatFrameClient extends JFrame {
 	private JComboBox cbSalonJoignable;
 	private HashMap<Integer, StyledDocument> hMapDocumentModel;
 	private HashMap<Integer, DefaultListModel<String>> hMapListModel;
+	private String userName;
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	private SalonLst hSalons;
+
+	public SalonLst gethSalons() {
+		return hSalons;
+	}
+
+	public void sethSalons(SalonLst hSalons) {
+		this.hSalons = hSalons;
+	}
 
 	private boolean isScrollLocked = true;
 
@@ -125,7 +145,8 @@ public class SimpleChatFrameClient extends JFrame {
 			sender.setMsgToSend(textField.getText());
 		} else {
 			sender.setMsgToSend(IfClientServerProtocol.USER_MESSAGE_CHANNEL + IfClientServerProtocol.SEPARATOR
-					+ tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()) + IfClientServerProtocol.SEPARATOR + textField.getText());
+					+ tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()) + IfClientServerProtocol.SEPARATOR
+					+ textField.getText());
 		}
 	}
 
@@ -280,6 +301,24 @@ public class SimpleChatFrameClient extends JFrame {
 		list.setMinimumSize(new Dimension(100, 0));
 		splitPane.setLeftComponent(list);
 
+		JPopupMenu popupMenu_1 = new JPopupMenu();
+		addPopup(list, popupMenu_1);
+
+		JMenuItem mntmSalonPriv = new JMenuItem(Messages.getString("SimpleChatFrameClient.chckbxmntmSalonPriv.text_1")); //$NON-NLS-1$
+		mntmSalonPriv.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (!getUserName().equals(list.getSelectedValue())) {
+					//System.out.println(getUserName() + "/" + list.getSelectedValue());
+					sender.setMsgToSend(
+							IfClientServerProtocol.CREATE_CHANNEL + IfClientServerProtocol.SEPARATOR +
+							IfClientServerProtocol.CHANNEL_PRIVATE + IfClientServerProtocol.SEPARATOR + getUserName() + "/" + list.getSelectedValue());
+				}
+
+			}
+		});
+		mntmSalonPriv.setEnabled(true);
+		popupMenu_1.add(mntmSalonPriv);
+
 		// JTextPane textArea = new JTextPane((StyledDocument)documentModel);
 		JTextPane textArea = new JTextPane((StyledDocument) hMapDocumentModel.get(0));
 		textArea.setEnabled(false);
@@ -320,15 +359,17 @@ public class SimpleChatFrameClient extends JFrame {
 	}
 
 	public void ajouterUserSalon(String userLogin, int indexSalon) {
+		System.out.println("ajouterusersalon" + userLogin + indexSalon);
+
 		this.hMapListModel.get(indexSalon).addElement(userLogin);
 	}
 
-	public void creerSalon(String userName, String salonName) {
-		Integer key = 1;
-		ajoutSalon(key);
-		Document documentModel = this.hMapDocumentModel.get(key);
-		ListModel<String> listModel = this.hMapListModel.get(key);
-		this.hMapListModel.get(key).addElement(userName);
+	public void creerSalon(String userName, String salonName, int indexSalon) {
+		//Integer key = 1;
+		ajoutSalon(indexSalon);
+		Document documentModel = this.hMapDocumentModel.get(indexSalon);
+		ListModel<String> listModel = this.hMapListModel.get(indexSalon);
+		this.hMapListModel.get(indexSalon).addElement(userName);
 
 		JSplitPane splitPane2 = new JSplitPane();
 		tabbedPane.addTab(salonName, null, splitPane2, null);

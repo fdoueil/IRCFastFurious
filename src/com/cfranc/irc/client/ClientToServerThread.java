@@ -64,13 +64,26 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 	public void receiveMessage(String user, String line) {
 		Style styleBI = ((StyledDocument) hMapDocumentModel.get(0)).getStyle(SimpleChatClientApp.BOLD_ITALIC);
 		Style styleGP = ((StyledDocument) hMapDocumentModel.get(0)).getStyle(SimpleChatClientApp.GRAY_PLAIN);
-		receiveMessage(user, line, styleBI, styleGP);
+		receiveMessage(0, user, line, styleBI, styleGP);
 	}
 
-	public void receiveMessage(String user, String line, Style styleBI, Style styleGP) {
+	public void receiveMessageSalon(String salon, String user, String line) {
+
+		int numSalon = 0;
+
+		numSalon = controleur.gethSalons().findSalonIndexByName(salon);
+		Style styleBI = ((StyledDocument) hMapDocumentModel.get(numSalon)).getStyle(SimpleChatClientApp.BOLD_ITALIC);
+		Style styleGP = ((StyledDocument) hMapDocumentModel.get(numSalon)).getStyle(SimpleChatClientApp.GRAY_PLAIN);
+
+		receiveMessage(numSalon, user, line, styleBI, styleGP);
+	}
+
+	public void receiveMessage(int numOnglet, String user, String line, Style styleBI, Style styleGP) {
 		try {
-			hMapDocumentModel.get(0).insertString(hMapDocumentModel.get(0).getLength(), user + " : ", styleBI);
-			hMapDocumentModel.get(0).insertString(hMapDocumentModel.get(0).getLength(), line + "\n", styleGP);
+			hMapDocumentModel.get(numOnglet).insertString(hMapDocumentModel.get(numOnglet).getLength(), user + " : ",
+					styleBI);
+			hMapDocumentModel.get(numOnglet).insertString(hMapDocumentModel.get(numOnglet).getLength(), line + "\n",
+					styleGP);
 		} catch (BadLocationException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -79,9 +92,7 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 
 	void readMsg() throws IOException {
 		String line = streamIn.readUTF();
-		System.out.println(line);
-
-		System.out.println("suppression client ");
+		System.out.println("RECU->" + line);
 
 		if (line.startsWith(IfClientServerProtocol.ADD)) {
 			String newUser = line.substring(IfClientServerProtocol.ADD.length());
@@ -96,31 +107,50 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 				receiveMessage(delUser, " quitte le salon !");
 			}
 		} else if (line.endsWith(IfClientServerProtocol.OK_CHANNEL)) {
-	
+
 			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
 			if (userMsg[1].equals(this.login)) {
-				controleur.creerSalon(userMsg[1], userMsg[2]);
-				Salon newSalon=new Salon(userMsg[2], userMsg[1], false);
+				Salon newSalon = new Salon(userMsg[2], userMsg[1], false);
 				newSalon.gethUsersLogin().add(userMsg[1]);
 				controleur.gethSalons().getLstSalons().add(newSalon);
-			} else {	
+				controleur.creerSalon(userMsg[1], userMsg[2], controleur.gethSalons().findSalonIndexByName(userMsg[2]));
+			} else {
 				controleur.creerSalonJoignable(userMsg[1], userMsg[2]);
 			}
 			receiveMessage(userMsg[1], "a crée le salon " + userMsg[2]);
-			
+
 		} else if (line.endsWith(IfClientServerProtocol.OK_JOIN_CHANNEL)) {
 			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
 			receiveMessage(userMsg[1], " a rejoint le salon " + userMsg[2]);
 
-			int indexSalon= controleur.gethSalons().findSalonIndexByName(userMsg[2]);
+			int indexSalon = controleur.gethSalons().findSalonIndexByName(userMsg[2]);
+			Salon salon = controleur.gethSalons().get(indexSalon);
 			if (userMsg[1].equals(this.login)) {
-				controleur.creerSalon(userMsg[1], userMsg[2]);
-				Salon salon = controleur.gethSalons().get(indexSalon);
-				salon.gethUsersLogin().add(userMsg[1]);
-				controleur.ajouterUserSalon(salon.getUserCreator(),indexSalon);
+				controleur.creerSalon(userMsg[1], userMsg[2], indexSalon);
+				//salon.gethUsersLogin().add(userMsg[1]);
+
+				for (String userLogin : salon.gethUsersLogin()) {
+					controleur.ajouterUserSalon(userLogin, indexSalon);
+				}
+			} else if (this.login.equals(salon.getUserCreator())) {
+				controleur.ajouterUserSalon(userMsg[1], indexSalon);
 			} else {
-				controleur.ajouterUserSalon(userMsg[1],indexSalon);
+				salon.gethUsersLogin().add(userMsg[1]);
+				// refresh  si j'ai déjà rejoins ce salon
+				if (salon.userExistSalon(this.login)) {
+					controleur.ajouterUserSalon(userMsg[1], indexSalon);
+				}
 			}
+
+		} else if (line.endsWith(IfClientServerProtocol.USER_MESSAGE_CHANNEL)) {
+			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
+			receiveMessageSalon(userMsg[2], userMsg[1], userMsg[3]);
+		} else if (line.endsWith(IfClientServerProtocol.CREATE_CHANNEL + IfClientServerProtocol.CHANNEL_PRIVATE)) {
+			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
+			controleur.gethSalons().getLstSalons().add(new Salon(userMsg[3], userMsg[1], true));
+			int indexSalon = controleur.gethSalons().findSalonIndexByName(userMsg[3]);
+			controleur.creerSalon(userMsg[1], userMsg[3], indexSalon);
+			controleur.ajouterUserSalon(userMsg[2], indexSalon);
 		} else {
 			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
 			String user = userMsg[1];

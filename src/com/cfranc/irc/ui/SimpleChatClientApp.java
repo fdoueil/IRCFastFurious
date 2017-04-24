@@ -96,7 +96,10 @@ public class SimpleChatClientApp {
 		this.frame.setTitle(
 				this.frame.getTitle() + " : " + clientName + " connected to " + serverName + ":" + serverPort);
 		((JFrame) this.frame).setVisible(true);
-
+		this.frame.sethSalons(hSalons);
+		
+		this.frame.setUserName(clientName);
+		
 		this.frame.addWindowListener(new WindowListener() {
 
 			@Override
@@ -145,8 +148,8 @@ public class SimpleChatClientApp {
 		});
 	}
 
-	public void creerSalon(String userName, String salonName) {
-		this.frame.creerSalon(userName, salonName);
+	public void creerSalon(String userName, String salonName, int indexSalon) {
+		this.frame.creerSalon(userName, salonName, indexSalon);
 	}
 
 	public void creerSalonJoignable(String userName, String salonName) {

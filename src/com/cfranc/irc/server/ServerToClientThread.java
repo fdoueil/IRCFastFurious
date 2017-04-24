@@ -14,6 +14,11 @@ import com.cfranc.irc.IfClientServerProtocol;
 
 public class ServerToClientThread extends Thread {
 	private User user;
+
+	public User getUser() {
+		return user;
+	}
+
 	private Socket socket = null;
 	private DataInputStream streamIn = null;
 	private DataOutputStream streamOut = null;
@@ -112,19 +117,32 @@ public class ServerToClientThread extends Thread {
 								BroadcastThread.removeClient(user);
 
 							} else if (userMsg[2].startsWith(IfClientServerProtocol.CREATE_CHANNEL)) {
-								if (login.equals(user.getLogin())) {
-									Salon salon = new Salon(userMsg[3], user.getLogin(), false);
+								if (userMsg[3].equals(IfClientServerProtocol.CHANNEL_PRIVATE)) {
+									String[] userSalonPrivate = userMsg[4].split("/");
+									Salon salon = new Salon(userMsg[4], userSalonPrivate[0], true);
+									salon.hUsersLogin.add(userSalonPrivate[0]);
+									salon.hUsersLogin.add(userSalonPrivate[1]);
+									serverSalon.getLstSalons().add(salon);
+									BroadcastThread.sendMessageSalonPrivate(userMsg[4], userSalonPrivate[0], userSalonPrivate[1]);
+								} else {
+									if (login.equals(user.getLogin())) {
 
-									// ajout le salon dans la liste des salons
-									if (!serverSalon.getLstSalons().contains(salon)) {
-										serverSalon.getLstSalons().add(salon);
-										// ajout le salon pour le user
-										user.getSalons().add(salon);
-										// Acquittement de la création du salon
-										BroadcastThread.sendMessage(user, salon.getNomSalon()
-												+ IfClientServerProtocol.SEPARATOR + IfClientServerProtocol.OK_CHANNEL);
+										Salon salon = new Salon(userMsg[3], user.getLogin(), false);
+
+										// ajout le salon dans la liste des
+										// salons
+										if (!serverSalon.getLstSalons().contains(salon)) {
+											serverSalon.getLstSalons().add(salon);
+											// ajout le salon pour le user
+											user.getSalons().add(salon);
+											// Acquittement de la création du
+											// salon
+											BroadcastThread.sendMessage(user,
+													salon.getNomSalon() + IfClientServerProtocol.SEPARATOR
+															+ IfClientServerProtocol.OK_CHANNEL);
+										}
+										salon.hUsersLogin.add(user.getLogin());
 									}
-
 								}
 							} else if (userMsg[2].startsWith(IfClientServerProtocol.USER_JOIN_CHANNEL)) {
 								if (login.equals(user.getLogin())) {
@@ -132,8 +150,11 @@ public class ServerToClientThread extends Thread {
 									int indexSalon = 0;
 									indexSalon = serverSalon.findSalonIndexByName(userMsg[3]);
 
-									// ajout le salon dans la liste des salons
+									// ajout d utilisateur dans le salon
+									System.out.println("ajout utilisateur" + userMsg[1]);
 									serverSalon.get(indexSalon).hUsersLogin.add(userMsg[1]);
+									System.out.println(
+											"utilisateur salon" + serverSalon.get(indexSalon).gethUsersLogin());
 
 									// Acquittement de la création du salon
 									BroadcastThread.sendMessage(user, userMsg[3] + IfClientServerProtocol.SEPARATOR
@@ -143,6 +164,8 @@ public class ServerToClientThread extends Thread {
 								System.out.println("Message sur un channel !");
 								int indexSalon = 0;
 								indexSalon = serverSalon.findSalonIndexByName(userMsg[3]);
+								Salon userSalon = serverSalon.get(indexSalon);
+								BroadcastThread.sendMessageSalon(userSalon, user, userMsg[4]);
 
 							} else {
 								BroadcastThread.sendMessage(user, msg);
