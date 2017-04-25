@@ -26,7 +26,10 @@ public class MyDocumentListener implements DocumentListener {
 					.getScaledInstance(18, 18, Image.SCALE_SMOOTH));
 			sad = new ImageIcon(ImageIO.read(new URL("file:ressources/sad.png"))
 					.getScaledInstance(18, 18, Image.SCALE_SMOOTH));
-
+			angry = new ImageIcon(ImageIO.read(new URL("file:ressources/angry.png"))
+					.getScaledInstance(18, 18, Image.SCALE_SMOOTH));
+			wink = new ImageIcon(ImageIO.read(new URL("file:ressources/wink.png"))
+					.getScaledInstance(18, 18, Image.SCALE_SMOOTH));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -34,9 +37,9 @@ public class MyDocumentListener implements DocumentListener {
 
 	private JTextPane textPane;
 
-	static ImageIcon smiley, sad;
-	static final String SMILEY_EMOTICON = ":)", SAD_EMOTICON = ":(";
-	String[] emoticons = { SMILEY_EMOTICON, SAD_EMOTICON };
+	static ImageIcon smiley, sad, angry, wink;
+	static final String SMILEY_EMOTICON = ":)", SAD_EMOTICON = ":(", ANGRY_EMOTICON = "X(", WINK_EMOTICON=";)";
+	String[] emoticons = { SMILEY_EMOTICON, SAD_EMOTICON, ANGRY_EMOTICON, WINK_EMOTICON };
 
 	@Override
 	public void insertUpdate(DocumentEvent e) {
@@ -68,6 +71,12 @@ public class MyDocumentListener implements DocumentListener {
 									break;
 								case SAD_EMOTICON:
 									StyleConstants.setIcon(attrs, sad);
+									break;
+								case ANGRY_EMOTICON:
+									StyleConstants.setIcon(attrs, angry);
+									break;
+								case WINK_EMOTICON:
+									StyleConstants.setIcon(attrs, wink);
 									break;
 								}
 
