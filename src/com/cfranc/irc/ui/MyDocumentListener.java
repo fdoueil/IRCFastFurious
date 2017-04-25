@@ -99,6 +99,7 @@ public class MyDocumentListener implements DocumentListener {
 
 	@Override
 	public void changedUpdate(DocumentEvent e) {
+		System.out.println("changed");
 	}
 
 	public void setTextPane(JTextPane textPane) {
