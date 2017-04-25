@@ -22,7 +22,6 @@ public class SalonLst  {
 		
 		return (Salon) lstSalons.get(i);
 		
-		
 	}
 
 	public int findSalonIndexByName(String salonName) {
