@@ -132,11 +132,11 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 					controleur.ajouterUserSalon(userLogin, indexSalon);
 				}
 				salon.gethUsersLogin().add(userMsg[1]);
-				receiveMessageSalon(userMsg[2], userMsg[1], userMsg[1] + " a rejoint le salon " + userMsg[2]);
+				receiveMessageSalon(userMsg[2], userMsg[1], " a rejoint le salon " + userMsg[2]);
 			} else if (salon.userExistSalon(this.login)) {
 				//else if (this.login.equals(salon.getUserCreator()) || salon.userExistSalon(this.login)) {
 				controleur.ajouterUserSalon(userMsg[1], indexSalon);
-				receiveMessageSalon(userMsg[2], userMsg[1], userMsg[1] + " a rejoint le salon " + userMsg[2]);
+				receiveMessageSalon(userMsg[2], userMsg[1], " a rejoint le salon " + userMsg[2]);
 			} else {
 				salon.gethUsersLogin().add(userMsg[1]);
 			}
