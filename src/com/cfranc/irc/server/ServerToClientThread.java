@@ -31,7 +31,6 @@ public class ServerToClientThread extends Thread {
 		this.socket = socket;
 	}
 
-	// new HRAJ
 	public ServerToClientThread(User user, Socket socket, DefaultListModel<String> clientListModel, SalonLst salonLst) {
 		super();
 		this.user = user;
@@ -110,13 +109,12 @@ public class ServerToClientThread extends Thread {
 
 								clientListModel.removeElement(user.getLogin());
 
-								System.out.println("IfClientServerProtocol.DEL = " + IfClientServerProtocol.DEL);
-								System.out.println("user = " + user);
-								System.out.println("msg = " + msg);
 								BroadcastThread.sendQuitUser(user, IfClientServerProtocol.DEL);
 								BroadcastThread.removeClient(user);
-
+								
+								// CREATION SALON
 							} else if (userMsg[2].startsWith(IfClientServerProtocol.CREATE_CHANNEL)) {
+								// GESTION SALON PRIVE
 								if (userMsg[3].equals(IfClientServerProtocol.CHANNEL_PRIVATE)) {
 									String[] userSalonPrivate = userMsg[4].split("/");
 									Salon salon = new Salon(userMsg[4], userSalonPrivate[0], true);
@@ -144,6 +142,7 @@ public class ServerToClientThread extends Thread {
 										salon.hUsersLogin.add(user.getLogin());
 									}
 								}
+								// UTILISATEUR DEMANDE A REJOINDRE UN SALON
 							} else if (userMsg[2].startsWith(IfClientServerProtocol.USER_JOIN_CHANNEL)) {
 								if (login.equals(user.getLogin())) {
 
@@ -151,17 +150,13 @@ public class ServerToClientThread extends Thread {
 									indexSalon = serverSalon.findSalonIndexByName(userMsg[3]);
 
 									// ajout d utilisateur dans le salon
-									System.out.println("ajout utilisateur" + userMsg[1]);
 									serverSalon.get(indexSalon).hUsersLogin.add(userMsg[1]);
-									System.out.println(
-											"utilisateur salon" + serverSalon.get(indexSalon).gethUsersLogin());
 
 									// Acquittement de la création du salon
 									BroadcastThread.sendMessage(user, userMsg[3] + IfClientServerProtocol.SEPARATOR
 											+ IfClientServerProtocol.OK_JOIN_CHANNEL);
-									//BroadcastThread.sendMessageSalon(serverSalon.get(indexSalon), user, userMsg[3] + 
-									//		IfClientServerProtocol.SEPARATOR + IfClientServerProtocol.OK_JOIN_CHANNEL);
 								}
+								// UTILISATEUR POSTE UN MESSAGE SUR UN SALON
 							} else if (userMsg[2].startsWith(IfClientServerProtocol.USER_MESSAGE_CHANNEL)) {
 								int indexSalon = 0;
 								indexSalon = serverSalon.findSalonIndexByName(userMsg[3]);
@@ -174,27 +169,14 @@ public class ServerToClientThread extends Thread {
 						} else {
 
 							for (Salon salon : serverSalon.getLstSalons()) {
-								System.out.println("boucle des salons");
 								if (salon.getNomSalon() == "Général") {
 									clientListModel.removeElement(user.getLogin());
-
-									System.out.println("IfClientServerProtocol.DEL = " + IfClientServerProtocol.DEL);
-									System.out.println("user.getLogin = " + user.getLogin());
-									System.out.println("msg = " + msg);
 
 									BroadcastThread.sendQuitUser(user, IfClientServerProtocol.DEL);
 									BroadcastThread.removeClient(user);
 								}
 							}
 						}
-
-						// + HRAJ
-						System.out.println("line.startsWith(IfClientServerProtocol.DEL= "
-								+ line.startsWith(IfClientServerProtocol.DEL));
-
-						System.out.println("user= " + user.getLogin());
-						System.out.println("msg= " + msg);
-
 					} else {
 						doPost();
 					}

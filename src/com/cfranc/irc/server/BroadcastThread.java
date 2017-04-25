@@ -21,8 +21,7 @@ public class BroadcastThread extends Thread {
 			res=false;
 		}
 		else{
-			//clientTreadsMap.put(user, serverToClientThread);	
-			// modifs du 03/11 : ajout de tous les users à la liste des users des clients
+
 			for(Entry<User, ServerToClientThread> entry : clientTreadsMap.entrySet()) {
 				entry.getValue().post(IfClientServerProtocol.ADD+user.getLogin());
 			}
@@ -33,7 +32,6 @@ public class BroadcastThread extends Thread {
 				serverToClientThread.post(IfClientServerProtocol.ADD+entry.getKey().getLogin());
 			} 
 			serverToClientThread.postListSalon();
-			
 		}
 		return res;
 	}
@@ -45,7 +43,6 @@ public class BroadcastThread extends Thread {
 		while (receiverClientThreadIterator.hasNext()) {
 			ServerToClientThread clientThread = (ServerToClientThread) receiverClientThreadIterator.next();
 			clientThread.post("#"+sender.getLogin()+"#"+msg);			
-			System.out.println("sendMessage : "+"#"+sender.getLogin()+"#"+msg);
 		}
 	}
 	
@@ -54,18 +51,14 @@ public class BroadcastThread extends Thread {
 		Iterator<ServerToClientThread> receiverClientThreadIterator=clientTreads.iterator();
 		while (receiverClientThreadIterator.hasNext()) {
 			ServerToClientThread clientThread = (ServerToClientThread) receiverClientThreadIterator.next();
-			//si user est dans le salon
-			System.out.println("TAG:" + clientThread.getUser().getLogin());
-			
+
 			salon.allUser();
 			if (salon.userExistSalon(clientThread.getUser().getLogin())) {
 				// #Bill#C+MSG#Discussions#Message
 				clientThread.post(IfClientServerProtocol.SEPARATOR +sender.getLogin()+ 
 						IfClientServerProtocol.SEPARATOR +salon.getNomSalon() + 
 						IfClientServerProtocol.SEPARATOR + msg + IfClientServerProtocol.SEPARATOR +IfClientServerProtocol.USER_MESSAGE_CHANNEL);
-				//System.out.println("ENVOI:" + clientThread.getUser().getLogin());
 			}				
-			System.out.println("sendMessage : "+"#"+sender.getLogin()+"#"+msg);
 		}
 	}
 	
@@ -83,7 +76,6 @@ public class BroadcastThread extends Thread {
 						IfClientServerProtocol.SEPARATOR +
 						IfClientServerProtocol.CREATE_CHANNEL+IfClientServerProtocol.CHANNEL_PRIVATE;
 				clientThread.post(msg);
-				System.out.println(msg);
 			}				
 
 		}
@@ -93,16 +85,9 @@ public class BroadcastThread extends Thread {
 		Iterator<ServerToClientThread> receiverClientThreadIterator=clientTreads.iterator();
 		while (receiverClientThreadIterator.hasNext()) {
 			ServerToClientThread clientThread = (ServerToClientThread) receiverClientThreadIterator.next();
-			
-			System.out.println("sendMessage : "+ msg+sender.getLogin());
-
-			System.out.println(" sendQuitUser msg = " + msg);
-			System.out.println(" sendQuitUser sender.getlogin() =" + sender.getLogin());
-			System.out.println("sendMessage : "+ msg+sender.getLogin());
-			
+					
 			clientThread.post(msg+sender.getLogin());
 			
-// 			System.out.println("sendMessage : "+ msg +);
 		}
 		
 	}
