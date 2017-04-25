@@ -159,9 +159,10 @@ public class ServerToClientThread extends Thread {
 									// Acquittement de la création du salon
 									BroadcastThread.sendMessage(user, userMsg[3] + IfClientServerProtocol.SEPARATOR
 											+ IfClientServerProtocol.OK_JOIN_CHANNEL);
+									//BroadcastThread.sendMessageSalon(serverSalon.get(indexSalon), user, userMsg[3] + 
+									//		IfClientServerProtocol.SEPARATOR + IfClientServerProtocol.OK_JOIN_CHANNEL);
 								}
 							} else if (userMsg[2].startsWith(IfClientServerProtocol.USER_MESSAGE_CHANNEL)) {
-								System.out.println("Message sur un channel !");
 								int indexSalon = 0;
 								indexSalon = serverSalon.findSalonIndexByName(userMsg[3]);
 								Salon userSalon = serverSalon.get(indexSalon);

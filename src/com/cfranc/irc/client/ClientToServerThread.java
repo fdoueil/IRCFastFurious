@@ -121,7 +121,7 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 
 		} else if (line.endsWith(IfClientServerProtocol.OK_JOIN_CHANNEL)) {
 			String[] userMsg = line.split(IfClientServerProtocol.SEPARATOR);
-			receiveMessage(userMsg[1], " a rejoint le salon " + userMsg[2]);
+			//receiveMessage(userMsg[1], " a rejoint le salon " + userMsg[2]);
 
 			int indexSalon = controleur.gethSalons().findSalonIndexByName(userMsg[2]);
 			Salon salon = controleur.gethSalons().get(indexSalon);
@@ -131,8 +131,12 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 				for (String userLogin : salon.gethUsersLogin()) {
 					controleur.ajouterUserSalon(userLogin, indexSalon);
 				}
-			} else if (this.login.equals(salon.getUserCreator())) {
+				salon.gethUsersLogin().add(userMsg[1]);
+				receiveMessageSalon(userMsg[2], userMsg[1], userMsg[1] + " a rejoint le salon " + userMsg[2]);
+			} else if (salon.userExistSalon(this.login)) {
+				//else if (this.login.equals(salon.getUserCreator()) || salon.userExistSalon(this.login)) {
 				controleur.ajouterUserSalon(userMsg[1], indexSalon);
+				receiveMessageSalon(userMsg[2], userMsg[1], userMsg[1] + " a rejoint le salon " + userMsg[2]);
 			} else {
 				salon.gethUsersLogin().add(userMsg[1]);
 			}
