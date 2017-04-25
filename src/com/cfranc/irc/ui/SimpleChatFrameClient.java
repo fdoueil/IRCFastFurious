@@ -321,6 +321,9 @@ public class SimpleChatFrameClient extends JFrame {
 
 		// JTextPane textArea = new JTextPane((StyledDocument)documentModel);
 		JTextPane textArea = new JTextPane((StyledDocument) hMapDocumentModel.get(0));
+		MyDocumentListener docListener = new MyDocumentListener();
+		docListener.setTextPane(textArea);
+		textArea.getDocument().addDocumentListener(docListener);
 		textArea.setEnabled(false);
 		JScrollPane scrollPaneText = new JScrollPane(textArea);
 
@@ -392,6 +395,9 @@ public class SimpleChatFrameClient extends JFrame {
 		splitPane2.setLeftComponent(list);
 
 		JTextPane textArea = new JTextPane((StyledDocument) documentModel);
+		MyDocumentListener docListener = new MyDocumentListener();
+		docListener.setTextPane(textArea);
+		textArea.getDocument().addDocumentListener(docListener);
 		textArea.setEnabled(false);
 		JScrollPane scrollPaneText2 = new JScrollPane(textArea);
 
