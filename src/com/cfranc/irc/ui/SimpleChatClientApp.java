@@ -48,7 +48,7 @@ public class SimpleChatClientApp {
 	private SalonLst hSalons;
 
 	public static final String BOLD_ITALIC = "BoldItalic";
-	public static final String GRAY_PLAIN = "Gray";
+	public static final String GRAY_PLAIN = "Black";
 
 	public static DefaultListModel<String> createListModel() {
 		DefaultListModel<String> res = new DefaultListModel<String>();
@@ -70,7 +70,7 @@ public class SimpleChatClientApp {
 		Style styleGP = res.getStyle(GRAY_PLAIN);
 		StyleConstants.setBold(styleGP, false);
 		StyleConstants.setItalic(styleGP, false);
-		StyleConstants.setForeground(styleGP, Color.lightGray);
+		StyleConstants.setForeground(styleGP, Color.black);
 
 		return res;
 	}
