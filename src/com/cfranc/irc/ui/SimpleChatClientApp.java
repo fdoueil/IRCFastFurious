@@ -1,5 +1,7 @@
 package com.cfranc.irc.ui;
 
+import static org.hamcrest.CoreMatchers.describedAs;
+
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.WindowEvent;
@@ -152,6 +154,11 @@ public class SimpleChatClientApp {
 		this.frame.creerSalon(userName, salonName, indexSalon);
 	}
 
+	public void joindreSalon(String userName, String salonName, int indexSalon) {
+		this.frame.creerSalon(userName, salonName, indexSalon);
+		this.frame.supprimerSalonJoignable(salonName);
+	}
+	
 	public void creerSalonJoignable(String userName, String salonName) {
 		this.frame.creerSalonJoignable(userName, salonName);
 		Salon newSalon = new Salon(salonName, userName, false);

@@ -127,7 +127,7 @@ public class ClientToServerThread extends Thread implements IfSenderModel {
 			Salon salon = controleur.gethSalons().get(indexSalon);
 			
 			if (userMsg[1].equals(this.login)) {
-				controleur.creerSalon(userMsg[1], userMsg[2], indexSalon);
+				controleur.joindreSalon(userMsg[1], userMsg[2], indexSalon);
 				for (String userLogin : salon.gethUsersLogin()) {
 					controleur.ajouterUserSalon(userLogin, indexSalon);
 				}

@@ -361,6 +361,10 @@ public class SimpleChatFrameClient extends JFrame {
 		cbSalonJoignable.addItem(salonName);
 	}
 
+	public void supprimerSalonJoignable(String salonName) {
+		cbSalonJoignable.removeItem(salonName);
+	}
+	
 	public void ajouterUserSalon(String userLogin, int indexSalon) {
 		System.out.println("ajouterusersalon" + userLogin + indexSalon);
 
